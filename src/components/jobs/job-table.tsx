@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { JobWithDetails } from "@/lib/types/database";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,8 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { JobStatusSelect } from "./job-status-select";
 import { calculatePaymentStatus } from "@/lib/services/jobs";
+import { WhatsAppButton } from "@/components/whatsapp/whatsapp-button";
+import { MessageHistory } from "@/components/whatsapp/message-history";
 
 interface JobTableProps {
   jobs: JobWithDetails[];
@@ -47,10 +50,13 @@ export function JobTable({
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       recibido: { variant: "default" as const, label: "Recibido" },
-      en_produccion: { variant: "secondary" as const, label: "En Producción" },
-      terminado: { variant: "outline" as const, label: "Terminado" },
+      procesando: { variant: "secondary" as const, label: "Procesando" },
+      finalizado: { variant: "outline" as const, label: "Finalizado" },
+      montado: { variant: "secondary" as const, label: "Montado" },
+      delegado: { variant: "outline" as const, label: "Delegado" },
+      impreso: { variant: "secondary" as const, label: "Impreso" },
+      empacado: { variant: "outline" as const, label: "Empacado" },
       entregado: { variant: "secondary" as const, label: "Entregado" },
-      cancelado: { variant: "destructive" as const, label: "Cancelado" },
     };
 
     const config =
@@ -92,7 +98,10 @@ export function JobTable({
             <TableHead className="text-center py-1 text-xs font-semibold">
               Pago
             </TableHead>
-            <TableHead className="text-center w-[160px] py-1 text-xs font-semibold">
+            <TableHead className="text-center py-1 text-xs font-semibold">
+              WhatsApp
+            </TableHead>
+            <TableHead className="text-center w-[200px] py-1 text-xs font-semibold">
               Acciones
             </TableHead>
           </TableRow>
@@ -151,6 +160,22 @@ export function JobTable({
                       return null;
                   }
                 })()}
+              </TableCell>
+              <TableCell className="py-1">
+                <div className="flex items-center justify-center gap-1">
+                  <WhatsAppButton
+                    jobId={job.id}
+                    clientWhatsapp={job.client?.whatsapp || ""}
+                    onMessageCopied={() => {
+                      // Recargar la tabla si es necesario
+                      console.log("Mensaje copiado para trabajo:", job.id);
+                    }}
+                  />
+                  <MessageHistory
+                    jobId={job.id}
+                    clientWhatsapp={job.client?.whatsapp || ""}
+                  />
+                </div>
               </TableCell>
               <TableCell className="py-1">
                 <div className="flex items-center justify-center gap-1">

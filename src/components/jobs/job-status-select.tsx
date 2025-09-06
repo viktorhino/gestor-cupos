@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { JobWithDetails } from "@/lib/types/database";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,6 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { jobService } from "@/lib/services/jobs";
+import { whatsappService } from "@/lib/services/whatsapp-service";
+import { shouldGenerateMessage } from "@/lib/services/whatsapp-messages";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -20,20 +23,13 @@ interface JobStatusSelectProps {
 
 const statusConfig = {
   recibido: { variant: "default" as const, label: "Recibido" },
-  en_preprensa: { variant: "secondary" as const, label: "En Preprensa" },
-  pendiente_de_montaje: {
-    variant: "outline" as const,
-    label: "Pendiente de Montaje",
-  },
-  en_cupo: { variant: "secondary" as const, label: "En Cupo" },
-  impreso: { variant: "outline" as const, label: "Impreso" },
-  terminado: { variant: "outline" as const, label: "Terminado" },
-  listo_para_entrega: {
-    variant: "secondary" as const,
-    label: "Listo para Entrega",
-  },
+  procesando: { variant: "secondary" as const, label: "Procesando" },
+  finalizado: { variant: "outline" as const, label: "Finalizado" },
+  montado: { variant: "secondary" as const, label: "Montado" },
+  delegado: { variant: "outline" as const, label: "Delegado" },
+  impreso: { variant: "secondary" as const, label: "Impreso" },
+  empacado: { variant: "outline" as const, label: "Empacado" },
   entregado: { variant: "secondary" as const, label: "Entregado" },
-  cancelado: { variant: "destructive" as const, label: "Cancelado" },
 };
 
 export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
@@ -54,6 +50,23 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
           ...job,
           estado: newStatus as any,
         };
+
+        // Generar mensaje WhatsApp si es necesario
+        if (shouldGenerateMessage(newStatus)) {
+          try {
+            const message = await whatsappService.processStateChange(
+              updatedJob,
+              newStatus
+            );
+
+            if (message) {
+              toast.success("Mensaje WhatsApp generado");
+            }
+          } catch (error) {
+            console.error("Error generating WhatsApp message:", error);
+            toast.error("Estado actualizado, pero error al generar mensaje");
+          }
+        }
 
         if (onStatusChange) {
           onStatusChange(updatedJob);
@@ -102,6 +115,3 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
     </div>
   );
 }
-
-
-

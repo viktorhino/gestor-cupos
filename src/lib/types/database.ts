@@ -3,12 +3,12 @@
 
 export type JobStatus =
   | "recibido"
-  | "en_preprensa"
-  | "pendiente_de_montaje"
-  | "en_cupo"
+  | "procesando"
+  | "finalizado"
+  | "montado"
+  | "delegado"
   | "impreso"
-  | "terminado"
-  | "listo_para_entrega"
+  | "empacado"
   | "entregado";
 
 export type JobType = "tarjetas" | "volantes";
@@ -404,4 +404,33 @@ export interface PrintData {
   job: JobWithDetails;
   fecha_impresion: string;
   impresora?: string;
+}
+
+// WhatsApp Messages System
+export interface WhatsAppMessage {
+  id: string;
+  job_id: string;
+  estado_trigger: string;
+  template_name: string;
+  message_content: string;
+  sent_at: string;
+  sent_by?: string;
+  is_copied: boolean;
+  copied_at?: string;
+  created_at: string;
+}
+
+export interface MessageTemplate {
+  id: string;
+  name: string;
+  estado_trigger: string;
+  template_content: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Extended types with WhatsApp messages
+export interface JobWithWhatsApp extends JobWithDetails {
+  whatsapp_messages: WhatsAppMessage[];
 }
