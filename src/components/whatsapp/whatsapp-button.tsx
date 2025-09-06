@@ -91,9 +91,9 @@ export function WhatsAppButton({
       return {
         variant: "outline" as const,
         icon: MessageSquare,
-        text: "Sin mensaje",
         disabled: true,
         className: "text-gray-400",
+        title: "No hay mensajes pendientes",
       };
     }
 
@@ -101,19 +101,19 @@ export function WhatsAppButton({
       return {
         variant: "outline" as const,
         icon: CheckCircle,
-        text: "Copiado",
         disabled: false,
         className: "text-red-500 border-red-500",
+        title: "Mensaje copiado",
       };
     }
 
     return {
       variant: "default" as const,
       icon: Copy,
-      text: "Copiar",
       disabled: false,
       className:
         "text-green-600 bg-green-50 border-green-200 hover:bg-green-100",
+      title: "Copiar mensaje al portapapeles",
     };
   };
 
@@ -128,14 +128,9 @@ export function WhatsAppButton({
         onClick={handleCopyMessage}
         disabled={buttonState.disabled || isLoading}
         className={`${buttonState.className} transition-colors`}
-        title={
-          pendingMessage
-            ? "Copiar mensaje al portapapeles"
-            : "No hay mensajes pendientes"
-        }
+        title={buttonState.title}
       >
-        <IconComponent className="h-4 w-4 mr-1" />
-        {isLoading ? "..." : buttonState.text}
+        <IconComponent className="h-4 w-4" />
       </Button>
 
       {pendingMessage && !isCopied && (

@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, Clock, CheckCircle, Copy } from "lucide-react";
+import { MessageSquare, MessageSquareMore, Clock, CheckCircle, Copy } from "lucide-react";
 import { WhatsAppMessage } from "@/lib/types/database";
 import { whatsappService } from "@/lib/services/whatsapp-service";
 import { generateWhatsAppLink } from "@/lib/services/whatsapp-messages";
@@ -101,9 +101,8 @@ export function MessageHistory({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="outline" size="sm">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Historial
+          <Button variant="outline" size="sm" title="Ver historial de mensajes">
+            <MessageSquareMore className="h-4 w-4" />
           </Button>
         )}
       </DialogTrigger>
@@ -111,7 +110,7 @@ export function MessageHistory({
       <DialogContent className="max-w-4xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
+            <MessageSquareMore className="h-5 w-5" />
             Historial de Mensajes WhatsApp
           </DialogTitle>
         </DialogHeader>
