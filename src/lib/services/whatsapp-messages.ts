@@ -77,7 +77,7 @@ export function generateMessageContent(
   }
 
   // Generar información de millares
-  const millares = `${job.cantidad_millares} millares`;
+  let millares = `${job.cantidad_millares} millares`;
   if (job.es_1x2) {
     millares += " (1x2)";
   }
