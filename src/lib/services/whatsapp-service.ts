@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase/browser";
+import { createClient } from "@/lib/supabase/browser";
 import {
   WhatsAppMessage,
   MessageTemplate,
@@ -11,7 +11,7 @@ import {
 } from "./whatsapp-messages";
 
 export class WhatsAppService {
-  private supabase = supabase;
+  private supabase = createClient();
 
   /**
    * Crea un nuevo mensaje WhatsApp en la base de datos

@@ -15,3 +15,6 @@ export function createClient() {
 
   return createBrowserClient(supabaseConfig.url, supabaseConfig.anonKey);
 }
+
+// Exportar una instancia por defecto para compatibilidad
+export const supabase = createClient();
