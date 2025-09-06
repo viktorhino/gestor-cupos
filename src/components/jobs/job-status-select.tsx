@@ -51,14 +51,14 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
           estado: newStatus as any,
         };
 
-        // Generar mensaje WhatsApp si es necesario
-        if (shouldGenerateMessage(newStatus)) {
+        // Generar mensaje WhatsApp si es necesario (temporalmente deshabilitado)
+        if (false && shouldGenerateMessage(newStatus)) {
           try {
             const message = await whatsappService.processStateChange(
               updatedJob,
               newStatus
             );
-
+            
             if (message) {
               toast.success("Mensaje WhatsApp generado");
             }
