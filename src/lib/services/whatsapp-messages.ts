@@ -167,7 +167,6 @@ export async function generateMessageContent(
   const { specialFinishes, cardReferences, flyerTypes } =
     await getReferenceData();
 
-
   // Obtener datos del cliente
   const tratamiento =
     job.client?.tratamiento || job.client?.empresa || "Cliente";

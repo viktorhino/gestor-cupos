@@ -63,6 +63,7 @@ import {
   SpecialFinish,
 } from "@/lib/services/special-finishes";
 import { jobService } from "@/lib/services/jobs";
+import { whatsappService } from "@/lib/services/whatsapp-service";
 import { JobWithDetails } from "@/lib/types/database";
 
 // Schema simplificado - solo datos de producción
@@ -422,6 +423,19 @@ export function JobReceptionForm({
             console.error("Error uploading image:", error);
             toast.warning("Trabajo creado pero hubo un problema con la imagen");
           }
+        }
+
+        // Generar mensaje de WhatsApp automáticamente para trabajo nuevo
+        try {
+          // Obtener el trabajo completo con todas las relaciones
+          const fullJob = await jobService.getJobById(job.id);
+          if (fullJob) {
+            await whatsappService.processStateChange(fullJob, "recibido");
+            toast.success("Mensaje de WhatsApp generado automáticamente");
+          }
+        } catch (error) {
+          console.error("Error generating WhatsApp message:", error);
+          // No mostrar error al usuario, solo log
         }
 
         toast.success("Trabajo creado exitosamente");
