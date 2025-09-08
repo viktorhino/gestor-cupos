@@ -434,12 +434,16 @@ export function JobReceptionForm({
                             />
                             <CommandGroup>
                               {(() => {
-                                const filteredClients = clients.filter((client) =>
-                                  client.empresa
-                                    .toLowerCase()
-                                    .includes(clientSearchValue.toLowerCase())
+                                const filteredClients = clients.filter(
+                                  (client) =>
+                                    client.empresa
+                                      .toLowerCase()
+                                      .includes(clientSearchValue.toLowerCase())
                                 );
-                                console.log("Filtered clients:", filteredClients);
+                                console.log(
+                                  "Filtered clients:",
+                                  filteredClients
+                                );
                                 return filteredClients.map((client) => (
                                   <CommandItem
                                     key={client.id}

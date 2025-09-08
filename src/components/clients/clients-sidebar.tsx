@@ -262,7 +262,9 @@ export function ClientsSidebar({ isOpen, onClose }: ClientsSidebarProps) {
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className="font-medium">{client.empresa}</div>
+                              <div className="font-medium">
+                                {client.empresa}
+                              </div>
                               {client.encargado && (
                                 <div className="text-xs text-muted-foreground">
                                   Encargado: {client.encargado}
@@ -339,6 +341,3 @@ export function ClientsSidebar({ isOpen, onClose }: ClientsSidebarProps) {
     </>
   );
 }
-
-
-

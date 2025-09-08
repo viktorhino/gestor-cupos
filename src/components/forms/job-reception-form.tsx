@@ -105,6 +105,8 @@ export function JobReceptionForm({
   const [loading, setLoading] = useState(true);
   const [newClientDialog, setNewClientDialog] = useState(false);
   const [newClientName, setNewClientName] = useState("");
+  const [newClientEncargado, setNewClientEncargado] = useState("");
+  const [newClientTratamiento, setNewClientTratamiento] = useState("");
   const [newClientWhatsapp, setNewClientWhatsapp] = useState("");
   const [newClientObservaciones, setNewClientObservaciones] = useState("");
 
@@ -184,9 +186,11 @@ export function JobReceptionForm({
     if (newClientName && newClientWhatsapp) {
       try {
         const clientData = {
-          nombre: newClientName,
+          empresa: newClientName,
+          encargado: newClientEncargado || undefined,
+          tratamiento: newClientTratamiento || undefined,
           whatsapp: newClientWhatsapp,
-          observaciones: newClientObservaciones || undefined,
+          notas: newClientObservaciones || undefined,
         };
 
         console.log("Creating client with data:", clientData);
@@ -195,8 +199,10 @@ export function JobReceptionForm({
 
         if (newClient) {
           form.setValue("client_id", newClient.id);
-          setSelectedClient(newClient.nombre);
+          setSelectedClient(newClient.empresa);
           setNewClientName("");
+          setNewClientEncargado("");
+          setNewClientTratamiento("");
           setNewClientWhatsapp("");
           setNewClientObservaciones("");
           setNewClientDialog(false);
@@ -874,6 +880,28 @@ export function JobReceptionForm({
                 placeholder="Ej: Empresa ABC"
               />
             </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="client-encargado">Encargado</Label>
+                <Input
+                  id="client-encargado"
+                  value={newClientEncargado}
+                  onChange={(e) => setNewClientEncargado(e.target.value)}
+                  placeholder="Ej: Juan Pérez"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="client-tratamiento">Tratamiento</Label>
+                <Input
+                  id="client-tratamiento"
+                  value={newClientTratamiento}
+                  onChange={(e) => setNewClientTratamiento(e.target.value)}
+                  placeholder="Ej: Don Juan, Juan"
+                />
+              </div>
+            </div>
+            
             <div className="space-y-2">
               <Label htmlFor="client-whatsapp">WhatsApp *</Label>
               <Input
@@ -883,6 +911,7 @@ export function JobReceptionForm({
                 placeholder="Ej: 3001234567"
               />
             </div>
+            
             <div className="space-y-2">
               <Label htmlFor="client-observaciones">Observaciones</Label>
               <Textarea
