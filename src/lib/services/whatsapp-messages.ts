@@ -57,7 +57,7 @@ async function getMessageTemplates(): Promise<Record<string, string>> {
 function getDefaultTemplates(): Record<string, string> {
   return {
     recibido: `Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
-- {{tipo_trabajo}} {{características}}
+- {{tipo_trabajo}} {{caracteristicas}}
 - {{millares}}
 - {{terminaciones_especiales}}
 - {{observaciones}}{{imagen_trabajo}}
@@ -119,7 +119,7 @@ export async function generateMessageContent(
   const nombreTrabajo = job.nombre_trabajo || `Trabajo #${job.consecutivo}`;
   const tipoTrabajo = job.tipo === "tarjetas" ? "Tarjetas" : "Volantes";
 
-  // Generar información de características (terminación/tamaño-tintas)
+  // Generar información de caracteristicas (terminación/tamaño-tintas)
   let caracteristicas = "";
   if (job.tipo === "tarjetas" && job.card_reference) {
     caracteristicas = `${job.card_reference.terminacion} - ${job.card_reference.tamaño}`;
@@ -135,8 +135,14 @@ export async function generateMessageContent(
 
   // Generar terminaciones especiales
   let terminacionesEspeciales = "Ninguna";
-  if (job.terminaciones_especiales && Array.isArray(job.terminaciones_especiales) && job.terminaciones_especiales.length > 0) {
-    const terminacionesValidas = job.terminaciones_especiales.filter(t => t && t.nombre);
+  if (
+    job.terminaciones_especiales &&
+    Array.isArray(job.terminaciones_especiales) &&
+    job.terminaciones_especiales.length > 0
+  ) {
+    const terminacionesValidas = job.terminaciones_especiales.filter(
+      (t) => t && t.nombre
+    );
     if (terminacionesValidas.length > 0) {
       terminacionesEspeciales = terminacionesValidas
         .map((t) => `- ${t.nombre}`)
@@ -164,7 +170,7 @@ export async function generateMessageContent(
     .replace(/\{\{tratamiento\}\}/g, tratamiento)
     .replace(/\{\{nombre_trabajo\}\}/g, nombreTrabajo)
     .replace(/\{\{tipo_trabajo\}\}/g, tipoTrabajo)
-    .replace(/\{\{características\}\}/g, caracteristicas)
+    .replace(/\{\{caracteristicas\}\}/g, caracteristicas)
     .replace(/\{\{millares\}\}/g, millares)
     .replace(/\{\{terminaciones_especiales\}\}/g, terminacionesEspeciales)
     .replace(/\{\{observaciones\}\}/g, observaciones)
@@ -187,8 +193,8 @@ export function shouldGenerateMessage(estado: string): boolean {
 export function getTemplateName(estado: string): string {
   const templateNames: Record<string, string> = {
     recibido: "recibido",
-    montado: "montado_delegado",
-    delegado: "montado_delegado",
+    montado: "montado",
+    delegado: "delegado",
     impreso: "impreso",
     empacado: "empacado",
     entregado: "entregado",

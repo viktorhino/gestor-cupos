@@ -4,7 +4,7 @@
 
 UPDATE message_templates 
 SET template_content = 'Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
-- {{tipo_trabajo}} {{características}}
+- {{tipo_trabajo}} {{caracteristicas}}
 - {{millares}}
 - {{terminaciones_especiales}}
 - {{observaciones}}{{imagen_trabajo}}
