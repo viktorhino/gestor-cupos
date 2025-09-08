@@ -4,10 +4,59 @@ import {
   MessageTemplate,
 } from "@/lib/types/database";
 import { calculatePaymentStatus } from "./jobs";
+import { createClient } from "@/lib/supabase/browser";
 
-// Plantillas de mensajes por defecto
-export const MESSAGE_TEMPLATES: Record<string, string> = {
-  recibido: `Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
+// Cache para plantillas de mensajes
+let messageTemplatesCache: Record<string, string> = {};
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+/**
+ * Obtiene las plantillas de mensajes desde la base de datos
+ */
+async function getMessageTemplates(): Promise<Record<string, string>> {
+  const now = Date.now();
+  
+  // Verificar si el cache es válido
+  if (messageTemplatesCache && (now - cacheTimestamp) < CACHE_DURATION) {
+    return messageTemplatesCache;
+  }
+
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("message_templates")
+      .select("name, template_content")
+      .eq("is_active", true);
+
+    if (error) {
+      console.error("Error fetching message templates:", error);
+      return getDefaultTemplates();
+    }
+
+    // Convertir array a objeto
+    const templates: Record<string, string> = {};
+    data?.forEach(template => {
+      templates[template.name] = template.template_content;
+    });
+
+    // Actualizar cache
+    messageTemplatesCache = templates;
+    cacheTimestamp = now;
+
+    return templates;
+  } catch (error) {
+    console.error("Error fetching message templates:", error);
+    return getDefaultTemplates();
+  }
+}
+
+/**
+ * Plantillas por defecto como fallback
+ */
+function getDefaultTemplates(): Record<string, string> {
+  return {
+    recibido: `Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
 - {{tipo_trabajo}} {{terminacion_tamaño_tintas}}
 - {{millares}}
 - {{terminaciones_especiales}}
@@ -16,16 +65,16 @@ Adjuntamos imagen de lo que recibimos para que por favor nos valide que esté co
 
 A través de este medio le estaremos informando los avances que vayamos teniendo con su trabajo. Gracias por confiar en nosotros`,
 
-  montado: `Hola {{tratamiento}}. 
+    montado: `Hola {{tratamiento}}. 
 Un saludito rápido para contarle que su trabajo {{nombre_trabajo}} ya está montado y acaba de entrar a la cola de producción. Le seguiremos informando. Saludos.`,
 
-  delegado: `Hola {{tratamiento}}. 
+    delegado: `Hola {{tratamiento}}. 
 Un saludito rápido para contarle que su trabajo {{nombre_trabajo}} ya está montado y acaba de entrar a la cola de producción. Le seguiremos informando. Saludos.`,
 
-  impreso: `Hola {{tratamiento}}. 
+    impreso: `Hola {{tratamiento}}. 
 Sólo para avisarle que su trabajo {{nombre_trabajo}} ya está impreso. SÓLO FALTAN LAS TERMINACIONES y estamos en eso así que apenas esté listo por completo le avisaremos.`,
 
-  empacado: `Hola de nuevo {{tratamiento}}. 
+    empacado: `Hola de nuevo {{tratamiento}}. 
 Buenísimas noticias!!. Ya su trabajo {{nombre_trabajo}} está listo para que lo recoja o envíe por él. 
 Recuerde que nuestro horario es de 8:30am a 12:30m y de 1:30pm a 5:30pm (lo sábados sólo hasta las 2:00pm).
 
@@ -33,10 +82,11 @@ Por aquí lo esperamos!!.
 
 PD: sólo a manera de información, actualmente el saldo pendiente por este trabajo es de {{saldo_pendiente}}.`,
 
-  entregado: `Cordial saludo, {{tratamiento}}. 
+    entregado: `Cordial saludo, {{tratamiento}}. 
 Su trabajo {{nombre_trabajo}} fue entregado con éxito.
 Para nosotros siempre será un placer servirle.`,
-};
+  };
+}
 
 // Estados que generan mensajes
 export const MESSAGE_TRIGGER_STATES: string[] = [
@@ -51,17 +101,19 @@ export const MESSAGE_TRIGGER_STATES: string[] = [
 /**
  * Genera el contenido de un mensaje basado en el trabajo y el estado
  */
-export function generateMessageContent(
+export async function generateMessageContent(
   job: JobWithDetails,
   estado: string
-): string {
-  const template = MESSAGE_TEMPLATES[estado];
+): Promise<string> {
+  const templates = await getMessageTemplates();
+  const template = templates[estado];
   if (!template) {
     throw new Error(`No hay plantilla definida para el estado: ${estado}`);
   }
 
   // Obtener datos del cliente
-  const tratamiento = job.client?.tratamiento || job.client?.empresa || "Cliente";
+  const tratamiento =
+    job.client?.tratamiento || job.client?.empresa || "Cliente";
   const whatsapp = job.client?.whatsapp || "";
 
   // Obtener datos del trabajo

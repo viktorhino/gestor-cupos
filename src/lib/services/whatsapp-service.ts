@@ -165,7 +165,7 @@ export class WhatsAppService {
     }
 
     // Generar el contenido del mensaje
-    const messageContent = generateMessageContent(job, newEstado);
+    const messageContent = await generateMessageContent(job, newEstado);
 
     // Crear el mensaje en la base de datos
     const message = await this.createMessage(

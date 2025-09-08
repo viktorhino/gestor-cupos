@@ -27,29 +27,30 @@ const jobTest = {
   descuento: 0,
 };
 
-console.log("=== PRUEBA DE FUNCIONALIDAD WHATSAPP ===\n");
+async function runTest() {
+  console.log("=== PRUEBA DE FUNCIONALIDAD WHATSAPP ===\n");
 
-// Probar generación de mensaje para estado "recibido"
-console.log('1. Probando mensaje para estado "recibido":');
-try {
-  const mensajeRecibido = generateMessageContent(jobTest, "recibido");
-  console.log("✅ Mensaje generado correctamente:");
-  console.log(mensajeRecibido);
-} catch (error) {
-  console.log("❌ Error:", error.message);
-}
+  // Probar generación de mensaje para estado "recibido"
+  console.log('1. Probando mensaje para estado "recibido":');
+  try {
+    const mensajeRecibido = await generateMessageContent(jobTest, "recibido");
+    console.log("✅ Mensaje generado correctamente:");
+    console.log(mensajeRecibido);
+  } catch (error) {
+    console.log("❌ Error:", error.message);
+  }
 
-console.log("\n" + "=".repeat(50) + "\n");
+  console.log("\n" + "=".repeat(50) + "\n");
 
-// Probar generación de mensaje para estado "montado"
-console.log('2. Probando mensaje para estado "montado":');
-try {
-  const mensajeMontado = generateMessageContent(jobTest, "montado");
-  console.log("✅ Mensaje generado correctamente:");
-  console.log(mensajeMontado);
-} catch (error) {
-  console.log("❌ Error:", error.message);
-}
+  // Probar generación de mensaje para estado "montado"
+  console.log('2. Probando mensaje para estado "montado":');
+  try {
+    const mensajeMontado = await generateMessageContent(jobTest, "montado");
+    console.log("✅ Mensaje generado correctamente:");
+    console.log(mensajeMontado);
+  } catch (error) {
+    console.log("❌ Error:", error.message);
+  }
 
 console.log("\n" + "=".repeat(50) + "\n");
 
@@ -82,4 +83,8 @@ estados.forEach((estado) => {
   console.log(`Estado "${estado}" → Plantilla: "${nombrePlantilla}"`);
 });
 
-console.log("\n=== PRUEBA COMPLETADA ===");
+  console.log("\n=== PRUEBA COMPLETADA ===");
+}
+
+// Ejecutar la prueba
+runTest().catch(console.error);
