@@ -7,9 +7,13 @@ export function createClient() {
     anonKey: supabaseConfig.anonKey ? "Presente" : "Faltante",
   });
 
-  // Usar valores por defecto para desarrollo si no están configurados
-  const url = supabaseConfig.url || "https://placeholder.supabase.co";
-  const anonKey = supabaseConfig.anonKey || "placeholder-key";
+  // Usar la configuración robusta
+  const url = supabaseConfig.url;
+  const anonKey = supabaseConfig.anonKey;
+
+  if (!url || !anonKey) {
+    console.warn("Supabase configuration missing, using defaults");
+  }
 
   return createBrowserClient(url, anonKey);
 }

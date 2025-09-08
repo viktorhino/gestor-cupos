@@ -32,10 +32,19 @@ export const TABLES = {
   MESSAGE_TEMPLATES: "message_templates",
 };
 
-export const supabaseConfig = {
-  url: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || "",
-  anonKey:
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    process.env.SUPABASE_ANON_KEY ||
-    "",
+// Configuración robusta de Supabase
+const getSupabaseConfig = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  
+  // Valores por defecto para desarrollo
+  const defaultUrl = "https://dabffkglfwdjfaanzpkm.supabase.co";
+  const defaultAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhYmZma2dsZndkamZhYW56cGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ2NzQ4NzEsImV4cCI6MjA1MDI1MDg3MX0.placeholder";
+  
+  return {
+    url: url || defaultUrl,
+    anonKey: anonKey || defaultAnonKey,
+  };
 };
+
+export const supabaseConfig = getSupabaseConfig();
