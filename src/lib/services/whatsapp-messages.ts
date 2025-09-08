@@ -196,6 +196,15 @@ export async function generateMessageContent(
     flyer_type: job.flyer_type,
     flyer_type_id: job.flyer_type_id,
   });
+  
+  // Expandir el objeto card_reference para ver su contenido
+  if (job.card_reference) {
+    console.log("🔍 card_reference expandido:", JSON.stringify(job.card_reference, null, 2));
+    console.log("🔍 card_reference.terminacion:", job.card_reference.terminacion);
+    console.log("🔍 card_reference.tamaño:", job.card_reference.tamaño);
+  } else {
+    console.log("❌ card_reference es null o undefined");
+  }
 
   if (job.tipo === "tarjetas") {
     if (job.card_reference) {
