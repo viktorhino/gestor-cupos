@@ -7,13 +7,11 @@ export function createClient() {
     anonKey: supabaseConfig.anonKey ? "Presente" : "Faltante",
   });
 
-  if (!supabaseConfig.url || !supabaseConfig.anonKey) {
-    throw new Error(
-      "Supabase configuration is missing. Please check your .env.local file."
-    );
-  }
+  // Usar valores por defecto para desarrollo si no están configurados
+  const url = supabaseConfig.url || "https://placeholder.supabase.co";
+  const anonKey = supabaseConfig.anonKey || "placeholder-key";
 
-  return createBrowserClient(supabaseConfig.url, supabaseConfig.anonKey);
+  return createBrowserClient(url, anonKey);
 }
 
 // Exportar una instancia por defecto para compatibilidad
