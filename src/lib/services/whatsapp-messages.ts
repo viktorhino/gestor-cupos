@@ -188,15 +188,15 @@ export async function generateMessageContent(
 
   // Generar información de caracteristicas (terminación/tamaño-tintas)
   let caracteristicas = "No especificado";
-  
+
   console.log("Debugging características:", {
     tipo: job.tipo,
     card_reference: job.card_reference,
     card_reference_id: job.card_reference_id,
     flyer_type: job.flyer_type,
-    flyer_type_id: job.flyer_type_id
+    flyer_type_id: job.flyer_type_id,
   });
-  
+
   if (job.tipo === "tarjetas") {
     if (job.card_reference) {
       const terminacion = job.card_reference.terminacion || "No especificado";
@@ -205,14 +205,19 @@ export async function generateMessageContent(
       console.log("Características desde card_reference:", caracteristicas);
     } else if (job.card_reference_id) {
       // Fallback: buscar en el array de cardReferences
-      const cardRef = cardReferences.find(cr => cr.id === job.card_reference_id);
+      const cardRef = cardReferences.find(
+        (cr) => cr.id === job.card_reference_id
+      );
       if (cardRef) {
         const terminacion = cardRef.terminacion || "No especificado";
         const tamaño = cardRef.tamaño || "No especificado";
         caracteristicas = `${terminacion} - ${tamaño}`;
         console.log("Características desde fallback:", caracteristicas);
       } else {
-        console.log("Card reference no encontrado en fallback para ID:", job.card_reference_id);
+        console.log(
+          "Card reference no encontrado en fallback para ID:",
+          job.card_reference_id
+        );
       }
     }
   } else if (job.tipo === "volantes") {
@@ -223,18 +228,21 @@ export async function generateMessageContent(
       console.log("Características desde flyer_type:", caracteristicas);
     } else if (job.flyer_type_id) {
       // Fallback: buscar en el array de flyerTypes
-      const flyerType = flyerTypes.find(ft => ft.id === job.flyer_type_id);
+      const flyerType = flyerTypes.find((ft) => ft.id === job.flyer_type_id);
       if (flyerType) {
         const tamaño = flyerType.tamaño || "No especificado";
         const modo = flyerType.modo || "No especificado";
         caracteristicas = `${tamaño} - ${modo}`;
         console.log("Características desde fallback flyer:", caracteristicas);
       } else {
-        console.log("Flyer type no encontrado en fallback para ID:", job.flyer_type_id);
+        console.log(
+          "Flyer type no encontrado en fallback para ID:",
+          job.flyer_type_id
+        );
       }
     }
   }
-  
+
   console.log("Características finales:", caracteristicas);
 
   // Generar información de millares

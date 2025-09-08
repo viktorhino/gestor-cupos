@@ -30,6 +30,8 @@ export class JobService {
 
   // Obtener trabajo por ID
   async getJobById(id: string): Promise<JobWithDetails | null> {
+    console.log("🔍 Fetching job with ID:", id);
+    
     const { data, error } = await this.supabase
       .from("jobs")
       .select(
@@ -46,17 +48,35 @@ export class JobService {
       .single();
 
     if (error) {
-      console.error("Error fetching job:", error);
+      console.error("❌ Error fetching job:", error);
       return null;
     }
 
-    console.log("Job fetched with relations:", {
+    console.log("✅ Job fetched successfully:", {
       id: data.id,
       card_reference_id: data.card_reference_id,
       card_reference: data.card_reference,
       flyer_type_id: data.flyer_type_id,
       flyer_type: data.flyer_type,
     });
+
+    // Verificar si card_reference es null pero card_reference_id existe
+    if (data.card_reference_id && !data.card_reference) {
+      console.log("⚠️ WARNING: card_reference_id exists but card_reference is null!");
+      console.log("card_reference_id:", data.card_reference_id);
+      
+      // Intentar consulta directa para verificar
+      const { data: directCardRef, error: directError } = await this.supabase
+        .from("card_references")
+        .select("*")
+        .eq("id", data.card_reference_id)
+        .single();
+      
+      console.log("Direct card_reference query:", {
+        data: directCardRef,
+        error: directError
+      });
+    }
 
     return data;
   }
