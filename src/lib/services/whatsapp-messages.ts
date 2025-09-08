@@ -174,7 +174,7 @@ export async function generateMessageContent(
     card_reference: job.card_reference,
     flyer_type_id: job.flyer_type_id,
     flyer_type: job.flyer_type,
-    terminaciones_especiales: job.terminaciones_especiales
+    terminaciones_especiales: job.terminaciones_especiales,
   });
 
   // Obtener datos del cliente
@@ -211,9 +211,12 @@ export async function generateMessageContent(
     Array.isArray(job.terminaciones_especiales) &&
     job.terminaciones_especiales.length > 0
   ) {
-    console.log("Processing terminaciones especiales:", job.terminaciones_especiales);
+    console.log(
+      "Processing terminaciones especiales:",
+      job.terminaciones_especiales
+    );
     console.log("Available special finishes:", specialFinishes);
-    
+
     const terminacionesValidas = job.terminaciones_especiales
       .filter((t) => t && t.tipo)
       .map((t) => {

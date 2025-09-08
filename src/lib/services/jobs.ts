@@ -12,8 +12,8 @@ export class JobService {
         `
         *,
         client:clients(*),
-        card_reference:card_references(*),
-        flyer_type:flyer_types(*),
+        card_reference:card_references!card_reference_id(*),
+        flyer_type:flyer_types!flyer_type_id(*),
         payments:payments(*),
         deliveries:deliveries(*)
       `
@@ -36,8 +36,8 @@ export class JobService {
         `
         *,
         client:clients(*),
-        card_reference:card_references(*),
-        flyer_type:flyer_types(*),
+        card_reference:card_references!card_reference_id(*),
+        flyer_type:flyer_types!flyer_type_id(*),
         payments:payments(*),
         deliveries:deliveries(*)
       `
@@ -49,6 +49,14 @@ export class JobService {
       console.error("Error fetching job:", error);
       return null;
     }
+
+    console.log("Job fetched with relations:", {
+      id: data.id,
+      card_reference_id: data.card_reference_id,
+      card_reference: data.card_reference,
+      flyer_type_id: data.flyer_type_id,
+      flyer_type: data.flyer_type
+    });
 
     return data;
   }
