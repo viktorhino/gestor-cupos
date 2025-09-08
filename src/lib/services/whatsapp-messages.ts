@@ -167,15 +167,6 @@ export async function generateMessageContent(
   const { specialFinishes, cardReferences, flyerTypes } =
     await getReferenceData();
 
-  // Debug logs
-  console.log("Job data:", {
-    tipo: job.tipo,
-    card_reference_id: job.card_reference_id,
-    card_reference: job.card_reference,
-    flyer_type_id: job.flyer_type_id,
-    flyer_type: job.flyer_type,
-    terminaciones_especiales: job.terminaciones_especiales,
-  });
 
   // Obtener datos del cliente
   const tratamiento =
@@ -186,35 +177,14 @@ export async function generateMessageContent(
   const nombreTrabajo = job.nombre_trabajo || `Trabajo #${job.consecutivo}`;
   const tipoTrabajo = job.tipo === "tarjetas" ? "Tarjetas" : "Volantes";
 
-  // Generar información de caracteristicas (terminación/tamaño-tintas)
+  // Generar información de características
   let caracteristicas = "No especificado";
-
-  console.log("Debugging características:", {
-    tipo: job.tipo,
-    card_reference: job.card_reference,
-    card_reference_id: job.card_reference_id,
-    flyer_type: job.flyer_type,
-    flyer_type_id: job.flyer_type_id,
-  });
-
-  // Expandir el objeto card_reference para ver su contenido
-  if (job.card_reference) {
-    console.log(
-      "🔍 card_reference expandido:",
-      JSON.stringify(job.card_reference, null, 2)
-    );
-    console.log("🔍 card_reference.nombre:", job.card_reference.nombre);
-    console.log("🔍 card_reference.grupo:", job.card_reference.grupo);
-  } else {
-    console.log("❌ card_reference es null o undefined");
-  }
 
   if (job.tipo === "tarjetas") {
     if (job.card_reference) {
       // Para tarjetas, solo mostrar el nombre
       const nombre = job.card_reference.nombre || "No especificado";
       caracteristicas = nombre;
-      console.log("Características desde card_reference:", caracteristicas);
     } else if (job.card_reference_id) {
       // Fallback: buscar en el array de cardReferences
       const cardRef = cardReferences.find(
@@ -223,12 +193,6 @@ export async function generateMessageContent(
       if (cardRef) {
         const nombre = cardRef.nombre || "No especificado";
         caracteristicas = nombre;
-        console.log("Características desde fallback:", caracteristicas);
-      } else {
-        console.log(
-          "Card reference no encontrado en fallback para ID:",
-          job.card_reference_id
-        );
       }
     }
   } else if (job.tipo === "volantes") {
@@ -236,7 +200,6 @@ export async function generateMessageContent(
       const tamaño = job.flyer_type.tamaño || "No especificado";
       const modo = job.flyer_type.modo || "No especificado";
       caracteristicas = `${tamaño} - ${modo}`;
-      console.log("Características desde flyer_type:", caracteristicas);
     } else if (job.flyer_type_id) {
       // Fallback: buscar en el array de flyerTypes
       const flyerType = flyerTypes.find((ft) => ft.id === job.flyer_type_id);
@@ -244,17 +207,9 @@ export async function generateMessageContent(
         const tamaño = flyerType.tamaño || "No especificado";
         const modo = flyerType.modo || "No especificado";
         caracteristicas = `${tamaño} - ${modo}`;
-        console.log("Características desde fallback flyer:", caracteristicas);
-      } else {
-        console.log(
-          "Flyer type no encontrado en fallback para ID:",
-          job.flyer_type_id
-        );
       }
     }
   }
-
-  console.log("Características finales:", caracteristicas);
 
   // Generar información de millares
   let millares = `${job.cantidad_millares} millares`;
@@ -269,22 +224,13 @@ export async function generateMessageContent(
     Array.isArray(job.terminaciones_especiales) &&
     job.terminaciones_especiales.length > 0
   ) {
-    console.log(
-      "Processing terminaciones especiales:",
-      job.terminaciones_especiales
-    );
-    console.log("Available special finishes:", specialFinishes);
-
     const terminacionesValidas = job.terminaciones_especiales
       .filter((t) => t && t.tipo)
       .map((t) => {
         const specialFinish = specialFinishes.find((sf) => sf.id === t.tipo);
-        console.log(`Looking for tipo ${t.tipo}, found:`, specialFinish);
         return specialFinish ? specialFinish.nombre : t.tipo;
       })
       .filter((nombre) => nombre);
-
-    console.log("Terminaciones validas:", terminacionesValidas);
 
     if (terminacionesValidas.length > 0) {
       terminacionesEspeciales = terminacionesValidas
