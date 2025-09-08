@@ -29,7 +29,7 @@ export const TABLES = {
   CLIENTS: "clients",
   PAYMENTS: "payments",
   WHATSAPP_MESSAGES: "whatsapp_messages",
-  MESSAGE_TEMPLATES: "message_templates"
+  MESSAGE_TEMPLATES: "message_templates",
 };
 
 export const supabaseConfig = {
