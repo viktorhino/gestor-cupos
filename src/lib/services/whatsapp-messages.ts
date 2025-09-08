@@ -16,9 +16,9 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
  */
 async function getMessageTemplates(): Promise<Record<string, string>> {
   const now = Date.now();
-  
+
   // Verificar si el cache es válido
-  if (messageTemplatesCache && (now - cacheTimestamp) < CACHE_DURATION) {
+  if (messageTemplatesCache && now - cacheTimestamp < CACHE_DURATION) {
     return messageTemplatesCache;
   }
 
@@ -36,7 +36,7 @@ async function getMessageTemplates(): Promise<Record<string, string>> {
 
     // Convertir array a objeto
     const templates: Record<string, string> = {};
-    data?.forEach(template => {
+    data?.forEach((template) => {
       templates[template.name] = template.template_content;
     });
 
@@ -57,11 +57,10 @@ async function getMessageTemplates(): Promise<Record<string, string>> {
 function getDefaultTemplates(): Record<string, string> {
   return {
     recibido: `Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
-- {{tipo_trabajo}} {{terminacion_tamaño_tintas}}
+- {{tipo_trabajo}} {{características}}
 - {{millares}}
 - {{terminaciones_especiales}}
-- {{observaciones}}
-Adjuntamos imagen de lo que recibimos para que por favor nos valide que esté correcta {{imagen_trabajo}}
+- {{observaciones}}{{imagen_trabajo}}
 
 A través de este medio le estaremos informando los avances que vayamos teniendo con su trabajo. Gracias por confiar en nosotros`,
 
@@ -120,12 +119,12 @@ export async function generateMessageContent(
   const nombreTrabajo = job.nombre_trabajo || `Trabajo #${job.consecutivo}`;
   const tipoTrabajo = job.tipo === "tarjetas" ? "Tarjetas" : "Volantes";
 
-  // Generar información de terminación/tamaño-tintas
-  let terminacionTamañoTintas = "";
+  // Generar información de características (terminación/tamaño-tintas)
+  let caracteristicas = "";
   if (job.tipo === "tarjetas" && job.card_reference) {
-    terminacionTamañoTintas = `${job.card_reference.terminacion} - ${job.card_reference.tamaño}`;
+    caracteristicas = `${job.card_reference.terminacion} - ${job.card_reference.tamaño}`;
   } else if (job.tipo === "volantes" && job.flyer_type) {
-    terminacionTamañoTintas = `${job.flyer_type.tamaño} - ${job.flyer_type.modo}`;
+    caracteristicas = `${job.flyer_type.tamaño} - ${job.flyer_type.modo}`;
   }
 
   // Generar información de millares
@@ -135,13 +134,14 @@ export async function generateMessageContent(
   }
 
   // Generar terminaciones especiales
-  let terminacionesEspeciales = "";
-  if (job.terminaciones_especiales && job.terminaciones_especiales.length > 0) {
-    terminacionesEspeciales = job.terminaciones_especiales
-      .map((t) => `- ${t.nombre}`)
-      .join("\n");
-  } else {
-    terminacionesEspeciales = "Ninguna";
+  let terminacionesEspeciales = "Ninguna";
+  if (job.terminaciones_especiales && Array.isArray(job.terminaciones_especiales) && job.terminaciones_especiales.length > 0) {
+    const terminacionesValidas = job.terminaciones_especiales.filter(t => t && t.nombre);
+    if (terminacionesValidas.length > 0) {
+      terminacionesEspeciales = terminacionesValidas
+        .map((t) => `- ${t.nombre}`)
+        .join("\n");
+    }
   }
 
   // Generar observaciones
@@ -149,8 +149,8 @@ export async function generateMessageContent(
 
   // Generar imagen del trabajo
   const imagenTrabajo = job.imagen_url
-    ? `[Imagen adjunta: ${job.imagen_url}]`
-    : "[Sin imagen adjunta]";
+    ? `\n📎 Imagen del trabajo: ${job.imagen_url}`
+    : "\n📎 Sin imagen adjunta";
 
   // Calcular saldo pendiente para estado empacado
   let saldoPendiente = "";
@@ -164,7 +164,7 @@ export async function generateMessageContent(
     .replace(/\{\{tratamiento\}\}/g, tratamiento)
     .replace(/\{\{nombre_trabajo\}\}/g, nombreTrabajo)
     .replace(/\{\{tipo_trabajo\}\}/g, tipoTrabajo)
-    .replace(/\{\{terminacion_tamaño_tintas\}\}/g, terminacionTamañoTintas)
+    .replace(/\{\{características\}\}/g, caracteristicas)
     .replace(/\{\{millares\}\}/g, millares)
     .replace(/\{\{terminaciones_especiales\}\}/g, terminacionesEspeciales)
     .replace(/\{\{observaciones\}\}/g, observaciones)

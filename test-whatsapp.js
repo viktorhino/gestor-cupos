@@ -52,36 +52,36 @@ async function runTest() {
     console.log("❌ Error:", error.message);
   }
 
-console.log("\n" + "=".repeat(50) + "\n");
+  console.log("\n" + "=".repeat(50) + "\n");
 
-// Probar verificación de estados que generan mensajes
-console.log("3. Probando verificación de estados:");
-const estados = [
-  "recibido",
-  "procesando",
-  "montado",
-  "delegado",
-  "impreso",
-  "empacado",
-  "entregado",
-];
-estados.forEach((estado) => {
-  const debeGenerar = shouldGenerateMessage(estado);
-  console.log(
-    `Estado "${estado}": ${
-      debeGenerar ? "✅ Genera mensaje" : "❌ No genera mensaje"
-    }`
-  );
-});
+  // Probar verificación de estados que generan mensajes
+  console.log("3. Probando verificación de estados:");
+  const estados = [
+    "recibido",
+    "procesando",
+    "montado",
+    "delegado",
+    "impreso",
+    "empacado",
+    "entregado",
+  ];
+  estados.forEach((estado) => {
+    const debeGenerar = shouldGenerateMessage(estado);
+    console.log(
+      `Estado "${estado}": ${
+        debeGenerar ? "✅ Genera mensaje" : "❌ No genera mensaje"
+      }`
+    );
+  });
 
-console.log("\n" + "=".repeat(50) + "\n");
+  console.log("\n" + "=".repeat(50) + "\n");
 
-// Probar nombres de plantillas
-console.log("4. Probando nombres de plantillas:");
-estados.forEach((estado) => {
-  const nombrePlantilla = getTemplateName(estado);
-  console.log(`Estado "${estado}" → Plantilla: "${nombrePlantilla}"`);
-});
+  // Probar nombres de plantillas
+  console.log("4. Probando nombres de plantillas:");
+  estados.forEach((estado) => {
+    const nombrePlantilla = getTemplateName(estado);
+    console.log(`Estado "${estado}" → Plantilla: "${nombrePlantilla}"`);
+  });
 
   console.log("\n=== PRUEBA COMPLETADA ===");
 }
