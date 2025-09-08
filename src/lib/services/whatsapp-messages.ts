@@ -161,7 +161,7 @@ export async function generateMessageContent(
   let imagenTrabajo = "\n📎 Sin imagen adjunta";
   if (job.imagen_url) {
     // Si es base64, mostrar mensaje genérico
-    if (job.imagen_url.startsWith('data:image/')) {
+    if (job.imagen_url.startsWith("data:image/")) {
       imagenTrabajo = "\n📎 Imagen adjunta (ver en el sistema)";
     } else {
       // Si es URL, mostrarla
