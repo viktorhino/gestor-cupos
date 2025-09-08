@@ -1,3 +1,6 @@
+// Forzar renderizado dinámico para evitar problemas con variables de entorno
+export const dynamic = 'force-dynamic';
+
 import { MainLayout } from "@/components/layout/main-layout";
 import { PaymentsManagement } from "@/components/jobs/payments-management";
 
