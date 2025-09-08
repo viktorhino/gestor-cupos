@@ -7,7 +7,7 @@ import { calculatePaymentStatus } from "./jobs";
 
 // Plantillas de mensajes por defecto
 export const MESSAGE_TEMPLATES: Record<string, string> = {
-  recibido: `Hola {{nombre}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
+  recibido: `Hola {{tratamiento}}, cordial saludo. Recibimos su trabajo {{nombre_trabajo}} para producir con las siguientes especificaciones: 
 - {{tipo_trabajo}} {{terminacion_tamaño_tintas}}
 - {{millares}}
 - {{terminaciones_especiales}}
@@ -16,16 +16,16 @@ Adjuntamos imagen de lo que recibimos para que por favor nos valide que esté co
 
 A través de este medio le estaremos informando los avances que vayamos teniendo con su trabajo. Gracias por confiar en nosotros`,
 
-  montado: `Hola {{nombre}}. 
+  montado: `Hola {{tratamiento}}. 
 Un saludito rápido para contarle que su trabajo {{nombre_trabajo}} ya está montado y acaba de entrar a la cola de producción. Le seguiremos informando. Saludos.`,
 
-  delegado: `Hola {{nombre}}. 
+  delegado: `Hola {{tratamiento}}. 
 Un saludito rápido para contarle que su trabajo {{nombre_trabajo}} ya está montado y acaba de entrar a la cola de producción. Le seguiremos informando. Saludos.`,
 
-  impreso: `Hola {{nombre}}. 
+  impreso: `Hola {{tratamiento}}. 
 Sólo para avisarle que su trabajo {{nombre_trabajo}} ya está impreso. SÓLO FALTAN LAS TERMINACIONES y estamos en eso así que apenas esté listo por completo le avisaremos.`,
 
-  empacado: `Hola de nuevo {{nombre}}. 
+  empacado: `Hola de nuevo {{tratamiento}}. 
 Buenísimas noticias!!. Ya su trabajo {{nombre_trabajo}} está listo para que lo recoja o envíe por él. 
 Recuerde que nuestro horario es de 8:30am a 12:30m y de 1:30pm a 5:30pm (lo sábados sólo hasta las 2:00pm).
 
@@ -33,7 +33,7 @@ Por aquí lo esperamos!!.
 
 PD: sólo a manera de información, actualmente el saldo pendiente por este trabajo es de {{saldo_pendiente}}.`,
 
-  entregado: `Cordial saludo, {{nombre}}. 
+  entregado: `Cordial saludo, {{tratamiento}}. 
 Su trabajo {{nombre_trabajo}} fue entregado con éxito.
 Para nosotros siempre será un placer servirle.`,
 };
@@ -61,7 +61,7 @@ export function generateMessageContent(
   }
 
   // Obtener datos del cliente
-  const nombre = job.client?.empresa || "Cliente";
+  const tratamiento = job.client?.tratamiento || job.client?.empresa || "Cliente";
   const whatsapp = job.client?.whatsapp || "";
 
   // Obtener datos del trabajo
@@ -93,7 +93,7 @@ export function generateMessageContent(
   }
 
   // Generar observaciones
-  const observaciones = job.observaciones || "Ninguna";
+  const observaciones = job.observaciones || "No hay";
 
   // Generar imagen del trabajo
   const imagenTrabajo = job.imagen_url
@@ -109,7 +109,7 @@ export function generateMessageContent(
 
   // Reemplazar variables en la plantilla
   let content = template
-    .replace(/\{\{nombre\}\}/g, nombre)
+    .replace(/\{\{tratamiento\}\}/g, tratamiento)
     .replace(/\{\{nombre_trabajo\}\}/g, nombreTrabajo)
     .replace(/\{\{tipo_trabajo\}\}/g, tipoTrabajo)
     .replace(/\{\{terminacion_tamaño_tintas\}\}/g, terminacionTamañoTintas)
