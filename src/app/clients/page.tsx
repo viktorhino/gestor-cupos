@@ -61,7 +61,7 @@ export default function ClientsPage() {
   const handleDeleteClient = async (client: Client) => {
     if (
       confirm(
-        `¿Está seguro de que desea eliminar el cliente "${client.nombre}"?`
+        `¿Está seguro de que desea eliminar el cliente "${client.empresa}"?`
       )
     ) {
       try {

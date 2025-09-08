@@ -61,7 +61,7 @@ export function generateMessageContent(
   }
 
   // Obtener datos del cliente
-  const nombre = job.client?.nombre || "Cliente";
+  const nombre = job.client?.empresa || "Cliente";
   const whatsapp = job.client?.whatsapp || "";
 
   // Obtener datos del trabajo

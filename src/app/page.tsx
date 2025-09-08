@@ -342,7 +342,7 @@ export default function DashboardPage() {
                           #{job.consecutivo} - {job.tipo}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {job.client?.nombre} •{" "}
+                          {job.client?.empresa} •{" "}
                           {new Date(job.fecha_recepcion).toLocaleDateString()}
                         </p>
                       </div>

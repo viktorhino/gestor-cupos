@@ -55,7 +55,7 @@ export function ClientList({
   const filteredClients = clients.filter((client) => {
     const searchLower = searchTerm.toLowerCase();
     return (
-      client.nombre.toLowerCase().includes(searchLower) ||
+      client.empresa.toLowerCase().includes(searchLower) ||
       client.encargado?.toLowerCase().includes(searchLower) ||
       client.whatsapp.includes(searchTerm) ||
       client.email?.toLowerCase().includes(searchLower) ||
@@ -159,12 +159,12 @@ export function ClientList({
                     <Avatar className="w-12 h-12">
                       <AvatarImage src={client.foto} />
                       <AvatarFallback>
-                        {getInitials(client.nombre, client.encargado)}
+                        {getInitials(client.empresa, client.encargado)}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-lg truncate">
-                        {client.nombre}
+                        {client.empresa}
                       </h3>
                       {client.encargado && (
                         <p className="text-sm text-muted-foreground">
@@ -253,7 +253,7 @@ export function ClientList({
                       <Avatar className="w-8 h-8">
                         <AvatarImage src={client.foto} />
                         <AvatarFallback className="text-xs">
-                          {getInitials(client.nombre, client.encargado)}
+                          {getInitials(client.empresa, client.encargado)}
                         </AvatarFallback>
                       </Avatar>
                       <div>

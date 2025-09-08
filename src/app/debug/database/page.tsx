@@ -163,7 +163,7 @@ export default function DatabaseDebugPage() {
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {clients.map((client: any) => (
                   <div key={client.id} className="p-3 border rounded-lg">
-                    <div className="font-medium">{client.nombre}</div>
+                    <div className="font-medium">{client.empresa}</div>
                     <div className="text-sm text-gray-500">
                       {client.email} • {client.whatsapp}
                     </div>

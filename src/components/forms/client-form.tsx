@@ -36,8 +36,9 @@ export function ClientForm({
   loading = false,
 }: ClientFormProps) {
   const [formData, setFormData] = useState({
-    nombre: client?.nombre || "",
+    empresa: client?.empresa || "",
     encargado: client?.encargado || "",
+    tratamiento: client?.tratamiento || "",
     whatsapp: client?.whatsapp || "",
     email: client?.email || "",
     foto: client?.foto || "",
@@ -51,8 +52,8 @@ export function ClientForm({
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = "El nombre de la empresa es obligatorio";
+    if (!formData.empresa.trim()) {
+      newErrors.empresa = "El nombre de la empresa es obligatorio";
     }
 
     if (!formData.whatsapp.trim()) {
@@ -111,8 +112,8 @@ export function ClientForm({
     return numbers.slice(0, 10);
   };
 
-  const getInitials = (nombre: string, encargado?: string) => {
-    const firstInitial = nombre?.charAt(0) || "";
+  const getInitials = (empresa: string, encargado?: string) => {
+    const firstInitial = empresa?.charAt(0) || "";
     const lastInitial = encargado?.charAt(0) || "";
     return `${firstInitial}${lastInitial}`.toUpperCase();
   };
@@ -133,8 +134,8 @@ export function ClientForm({
               <Avatar className="w-20 h-20">
                 <AvatarImage src={formData.foto} />
                 <AvatarFallback className="text-lg">
-                  {formData.nombre ? (
-                    getInitials(formData.nombre, formData.encargado)
+                  {formData.empresa ? (
+                    getInitials(formData.empresa, formData.encargado)
                   ) : (
                     <Camera className="w-8 h-8" />
                   )}
@@ -157,16 +158,16 @@ export function ClientForm({
 
           {/* Nombre de la Empresa */}
           <div className="space-y-2">
-            <Label htmlFor="nombre">Nombre de la Empresa *</Label>
+            <Label htmlFor="empresa">Nombre de la Empresa *</Label>
             <Input
-              id="nombre"
-              value={formData.nombre}
-              onChange={(e) => handleInputChange("nombre", e.target.value)}
-              className={errors.nombre ? "border-red-500" : ""}
+              id="empresa"
+              value={formData.empresa}
+              onChange={(e) => handleInputChange("empresa", e.target.value)}
+              className={errors.empresa ? "border-red-500" : ""}
               placeholder="Ej: Empresa ABC"
             />
-            {errors.nombre && (
-              <p className="text-sm text-red-500">{errors.nombre}</p>
+            {errors.empresa && (
+              <p className="text-sm text-red-500">{errors.empresa}</p>
             )}
           </div>
 
@@ -178,6 +179,17 @@ export function ClientForm({
               value={formData.encargado}
               onChange={(e) => handleInputChange("encargado", e.target.value)}
               placeholder="Ej: Juan Pérez"
+            />
+          </div>
+
+          {/* Tratamiento */}
+          <div className="space-y-2">
+            <Label htmlFor="tratamiento">Tratamiento (opcional)</Label>
+            <Input
+              id="tratamiento"
+              value={formData.tratamiento}
+              onChange={(e) => handleInputChange("tratamiento", e.target.value)}
+              placeholder="Ej: Don Juan, Juan, Sr. Pérez"
             />
           </div>
 

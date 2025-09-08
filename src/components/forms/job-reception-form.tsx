@@ -117,7 +117,7 @@ export function JobReceptionForm({
 
   // Filtrar clientes
   const filteredClients = clients.filter((client) =>
-    client.nombre.toLowerCase().includes(clientSearchValue.toLowerCase())
+    client.empresa.toLowerCase().includes(clientSearchValue.toLowerCase())
   );
 
   // Manejar teclado en el select de cliente
@@ -157,9 +157,9 @@ export function JobReceptionForm({
 
   // Seleccionar cliente
   const selectClient = (client: any) => {
-    console.log("Selecting client:", client.nombre, "ID:", client.id);
+    console.log("Selecting client:", client.empresa, "ID:", client.id);
     form.setValue("client_id", client.id);
-    setSelectedClient(client.nombre);
+    setSelectedClient(client.empresa);
     setClientComboOpen(false);
     setClientSearchValue("");
     setSelectedClientIndex(-1);
@@ -264,7 +264,7 @@ export function JobReceptionForm({
 
       // Precargar datos del cliente
       if (initialData.client) {
-        setSelectedClient(initialData.client.nombre);
+        setSelectedClient(initialData.client.empresa);
       }
 
       console.log("Datos precargados exitosamente");
@@ -477,7 +477,7 @@ export function JobReceptionForm({
                                     }`}
                                   />
                                   <span className="text-sm">
-                                    {client.nombre}
+                                    {client.empresa}
                                   </span>
                                 </div>
                               ))}

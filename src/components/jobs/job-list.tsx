@@ -51,7 +51,7 @@ export function JobList({
   const filteredJobs = jobs.filter((job) => {
     const searchLower = searchTerm.toLowerCase();
     return (
-      job.client?.nombre?.toLowerCase().includes(searchLower) ||
+      job.client?.empresa?.toLowerCase().includes(searchLower) ||
       job.nombre_trabajo?.toLowerCase().includes(searchLower) ||
       job.id.toLowerCase().includes(searchLower)
     );

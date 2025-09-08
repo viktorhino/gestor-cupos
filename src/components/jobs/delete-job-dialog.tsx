@@ -48,7 +48,7 @@ export function DeleteJobDialog({
                 {job.nombre_trabajo || "Sin nombre"}
               </div>
               <div className="text-sm text-muted-foreground">
-                Cliente: {job.client?.nombre || "Sin cliente"}
+                Cliente: {job.client?.empresa || "Sin cliente"}
               </div>
               <div className="text-sm text-muted-foreground">
                 Trabajo #{job.consecutivo}

@@ -128,7 +128,7 @@ export function PaymentsManagement() {
           (job.nombre_trabajo || "")
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          job.client?.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          job.client?.empresa.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -312,7 +312,7 @@ export function PaymentsManagement() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4" />
-                            <span>{job.client?.nombre}</span>
+                            <span>{job.client?.empresa}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
@@ -444,7 +444,7 @@ export function PaymentsManagement() {
                   {selectedJob.nombre_trabajo || "Sin nombre"}
                 </h4>
                 <p className="text-sm text-muted-foreground">
-                  Cliente: {selectedJob.client?.nombre}
+                  Cliente: {selectedJob.client?.empresa}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Saldo pendiente: $

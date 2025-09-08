@@ -135,7 +135,7 @@ export function AddPaymentModal({
           <div className="p-3 bg-gray-50 rounded-lg">
             <h4 className="font-medium text-sm">{job.nombre_trabajo}</h4>
             <p className="text-xs text-muted-foreground">
-              Cliente: {job.client?.nombre}
+              Cliente: {job.client?.empresa}
             </p>
             <p className="text-xs text-muted-foreground">ID: {job.id}</p>
           </div>

@@ -713,9 +713,9 @@ export function JobReceptionForm({
                                 {clients.map((client) => (
                                   <CommandItem
                                     key={client.id}
-                                    value={client.nombre}
+                                    value={client.empresa}
                                     onSelect={(currentValue) => {
-                                      if (currentValue === client.nombre) {
+                                      if (currentValue === client.empresa) {
                                         field.onChange(client.id);
                                         setSelectedClient(client.id);
                                         setClientComboOpen(false);
@@ -730,7 +730,7 @@ export function JobReceptionForm({
                                           : "opacity-0"
                                       }`}
                                     />
-                                    {client.nombre}
+                                    {client.empresa}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>

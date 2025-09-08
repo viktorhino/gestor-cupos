@@ -33,8 +33,9 @@ export type UserRole = "admin" | "operario" | "entregas" | "comercial";
 // Base database types
 export interface Client {
   id: string;
-  nombre: string;
+  empresa: string;
   encargado?: string;
+  tratamiento?: string;
   nit?: string;
   whatsapp: string;
   email?: string;

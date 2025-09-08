@@ -210,7 +210,7 @@ export function JobReceptionForm({
 
       console.log("Datos del formulario a resetear:", formData);
       form.reset(formData);
-      setSelectedClient(initialData.client.nombre);
+      setSelectedClient(initialData.client.empresa);
       setJobType(initialData.tipo);
     }
   }, [initialData, cardReferences, flyerTypes, form]);
@@ -435,7 +435,7 @@ export function JobReceptionForm({
                             <CommandGroup>
                               {(() => {
                                 const filteredClients = clients.filter((client) =>
-                                  client.nombre
+                                  client.empresa
                                     .toLowerCase()
                                     .includes(clientSearchValue.toLowerCase())
                                 );
@@ -443,16 +443,16 @@ export function JobReceptionForm({
                                 return filteredClients.map((client) => (
                                   <CommandItem
                                     key={client.id}
-                                    value={client.nombre}
+                                    value={client.empresa}
                                     onSelect={(currentValue) => {
                                       console.log(
                                         "Selecting client:",
-                                        client.nombre,
+                                        client.empresa,
                                         "ID:",
                                         client.id
                                       );
                                       field.onChange(client.id);
-                                      setSelectedClient(client.nombre);
+                                      setSelectedClient(client.empresa);
                                       setClientComboOpen(false);
                                     }}
                                   >
@@ -463,7 +463,7 @@ export function JobReceptionForm({
                                           : "opacity-0"
                                       }`}
                                     />
-                                    {client.nombre}
+                                    {client.empresa}
                                   </CommandItem>
                                 ));
                               })()}

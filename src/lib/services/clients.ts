@@ -38,9 +38,10 @@ export class ClientService {
   ): Promise<Client | null> {
     // Limpiar campos undefined para evitar problemas con Supabase
     const cleanClient = {
-      nombre: client.nombre,
+      empresa: client.empresa,
       whatsapp: client.whatsapp,
       ...(client.encargado && { encargado: client.encargado }),
+      ...(client.tratamiento && { tratamiento: client.tratamiento }),
       ...(client.nit && { nit: client.nit }),
       ...(client.email && { email: client.email }),
       ...(client.direccion && { direccion: client.direccion }),

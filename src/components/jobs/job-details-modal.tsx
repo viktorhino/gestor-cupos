@@ -225,7 +225,7 @@ export function JobDetailsModal({
                   <div>
                     <p className="text-sm text-muted-foreground">Cliente</p>
                     <p className="font-medium">
-                      {job.client?.nombre || "No especificado"}
+                      {job.client?.empresa || "No especificado"}
                     </p>
                   </div>
                 </div>

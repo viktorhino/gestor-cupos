@@ -111,7 +111,7 @@ export function JobTable({
             <TableRow key={job.id} className="hover:bg-muted/50 h-6">
               <TableCell className="py-1">
                 <span className="font-medium text-sm">
-                  {job.client?.nombre || "Sin cliente"}
+                  {job.client?.empresa || "Sin cliente"}
                 </span>
               </TableCell>
               <TableCell className="py-1">

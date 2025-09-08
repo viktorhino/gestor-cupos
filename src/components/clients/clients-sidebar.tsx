@@ -75,7 +75,7 @@ export function ClientsSidebar({ isOpen, onClose }: ClientsSidebarProps) {
   const filteredClients = clients.filter((client) => {
     const searchLower = searchTerm.toLowerCase();
     return (
-      client.nombre.toLowerCase().includes(searchLower) ||
+      client.empresa.toLowerCase().includes(searchLower) ||
       client.encargado?.toLowerCase().includes(searchLower) ||
       client.whatsapp.includes(searchTerm) ||
       client.email?.toLowerCase().includes(searchLower) ||
@@ -143,7 +143,7 @@ export function ClientsSidebar({ isOpen, onClose }: ClientsSidebarProps) {
   const handleDeleteClient = async (client: Client) => {
     if (
       confirm(
-        `¿Está seguro de que desea eliminar el cliente "${client.nombre}"?`
+        `¿Está seguro de que desea eliminar el cliente "${client.empresa}"?`
       )
     ) {
       try {
@@ -258,11 +258,11 @@ export function ClientsSidebar({ isOpen, onClose }: ClientsSidebarProps) {
                             <Avatar className="w-8 h-8">
                               <AvatarImage src={client.foto} />
                               <AvatarFallback className="text-xs">
-                                {getInitials(client.nombre, client.encargado)}
+                                {getInitials(client.empresa, client.encargado)}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className="font-medium">{client.nombre}</div>
+                              <div className="font-medium">{client.empresa}</div>
                               {client.encargado && (
                                 <div className="text-xs text-muted-foreground">
                                   Encargado: {client.encargado}
