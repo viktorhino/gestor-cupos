@@ -196,21 +196,25 @@ export async function generateMessageContent(
     flyer_type: job.flyer_type,
     flyer_type_id: job.flyer_type_id,
   });
-  
+
   // Expandir el objeto card_reference para ver su contenido
   if (job.card_reference) {
-    console.log("🔍 card_reference expandido:", JSON.stringify(job.card_reference, null, 2));
-    console.log("🔍 card_reference.terminacion:", job.card_reference.terminacion);
-    console.log("🔍 card_reference.tamaño:", job.card_reference.tamaño);
+    console.log(
+      "🔍 card_reference expandido:",
+      JSON.stringify(job.card_reference, null, 2)
+    );
+    console.log("🔍 card_reference.nombre:", job.card_reference.nombre);
+    console.log("🔍 card_reference.grupo:", job.card_reference.grupo);
   } else {
     console.log("❌ card_reference es null o undefined");
   }
 
   if (job.tipo === "tarjetas") {
     if (job.card_reference) {
-      const terminacion = job.card_reference.terminacion || "No especificado";
-      const tamaño = job.card_reference.tamaño || "No especificado";
-      caracteristicas = `${terminacion} - ${tamaño}`;
+      // Usar las columnas que SÍ existen en la tabla
+      const nombre = job.card_reference.nombre || "No especificado";
+      const grupo = job.card_reference.grupo || "No especificado";
+      caracteristicas = `${nombre} - ${grupo}`;
       console.log("Características desde card_reference:", caracteristicas);
     } else if (job.card_reference_id) {
       // Fallback: buscar en el array de cardReferences
@@ -218,9 +222,9 @@ export async function generateMessageContent(
         (cr) => cr.id === job.card_reference_id
       );
       if (cardRef) {
-        const terminacion = cardRef.terminacion || "No especificado";
-        const tamaño = cardRef.tamaño || "No especificado";
-        caracteristicas = `${terminacion} - ${tamaño}`;
+        const nombre = cardRef.nombre || "No especificado";
+        const grupo = cardRef.grupo || "No especificado";
+        caracteristicas = `${nombre} - ${grupo}`;
         console.log("Características desde fallback:", caracteristicas);
       } else {
         console.log(
