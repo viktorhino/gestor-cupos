@@ -120,11 +120,15 @@ export async function generateMessageContent(
   const tipoTrabajo = job.tipo === "tarjetas" ? "Tarjetas" : "Volantes";
 
   // Generar información de caracteristicas (terminación/tamaño-tintas)
-  let caracteristicas = "";
+  let caracteristicas = "No especificado";
   if (job.tipo === "tarjetas" && job.card_reference) {
-    caracteristicas = `${job.card_reference.terminacion} - ${job.card_reference.tamaño}`;
+    const terminacion = job.card_reference.terminacion || "No especificado";
+    const tamaño = job.card_reference.tamaño || "No especificado";
+    caracteristicas = `${terminacion} - ${tamaño}`;
   } else if (job.tipo === "volantes" && job.flyer_type) {
-    caracteristicas = `${job.flyer_type.tamaño} - ${job.flyer_type.modo}`;
+    const tamaño = job.flyer_type.tamaño || "No especificado";
+    const modo = job.flyer_type.modo || "No especificado";
+    caracteristicas = `${tamaño} - ${modo}`;
   }
 
   // Generar información de millares
@@ -154,9 +158,16 @@ export async function generateMessageContent(
   const observaciones = job.observaciones || "No hay";
 
   // Generar imagen del trabajo
-  const imagenTrabajo = job.imagen_url
-    ? `\n📎 Imagen del trabajo: ${job.imagen_url}`
-    : "\n📎 Sin imagen adjunta";
+  let imagenTrabajo = "\n📎 Sin imagen adjunta";
+  if (job.imagen_url) {
+    // Si es base64, mostrar mensaje genérico
+    if (job.imagen_url.startsWith('data:image/')) {
+      imagenTrabajo = "\n📎 Imagen adjunta (ver en el sistema)";
+    } else {
+      // Si es URL, mostrarla
+      imagenTrabajo = `\n📎 Imagen del trabajo: ${job.imagen_url}`;
+    }
+  }
 
   // Calcular saldo pendiente para estado empacado
   let saldoPendiente = "";
