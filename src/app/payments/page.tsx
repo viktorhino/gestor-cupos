@@ -1,9 +1,10 @@
+import { MainLayout } from "@/components/layout/main-layout";
 import { PaymentsManagement } from "@/components/jobs/payments-management";
 
 export default function PaymentsPage() {
   return (
-    <div className="container mx-auto py-6">
+    <MainLayout title="Gestión de Pagos" subtitle="Administrar pagos de trabajos">
       <PaymentsManagement />
-    </div>
+    </MainLayout>
   );
 }

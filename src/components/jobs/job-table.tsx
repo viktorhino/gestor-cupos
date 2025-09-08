@@ -164,9 +164,7 @@ export function JobTable({
                           <AlertCircle className="h-4 w-4 text-yellow-600" />
                         );
                       case "pending":
-                        return (
-                          <XCircle className="h-4 w-4 text-red-600" />
-                        );
+                        return <XCircle className="h-4 w-4 text-red-600" />;
                       default:
                         return null;
                     }
