@@ -55,7 +55,7 @@ export class JobService {
       card_reference_id: data.card_reference_id,
       card_reference: data.card_reference,
       flyer_type_id: data.flyer_type_id,
-      flyer_type: data.flyer_type
+      flyer_type: data.flyer_type,
     });
 
     return data;
