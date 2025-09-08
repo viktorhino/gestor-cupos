@@ -11,7 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, MessageSquareMore, Clock, CheckCircle, Copy } from "lucide-react";
+import {
+  MessageSquare,
+  MessageSquareMore,
+  Clock,
+  CheckCircle,
+  Copy,
+} from "lucide-react";
 import { WhatsAppMessage } from "@/lib/types/database";
 import { whatsappService } from "@/lib/services/whatsapp-service";
 import { generateWhatsAppLink } from "@/lib/services/whatsapp-messages";

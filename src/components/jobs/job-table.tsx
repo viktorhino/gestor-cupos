@@ -96,10 +96,10 @@ export function JobTable({
             </TableHead>
             <TableHead className="py-1 text-xs font-semibold">Estado</TableHead>
             <TableHead className="text-center py-1 text-xs font-semibold">
-              Pago
+              WhatsApp
             </TableHead>
             <TableHead className="text-center py-1 text-xs font-semibold">
-              WhatsApp
+              Pago
             </TableHead>
             <TableHead className="text-center w-[200px] py-1 text-xs font-semibold">
               Acciones
@@ -134,33 +134,6 @@ export function JobTable({
               <TableCell className="py-1">
                 <JobStatusSelect job={job} onStatusChange={onJobUpdate} />
               </TableCell>
-              <TableCell className="text-center py-1">
-                {(() => {
-                  const paymentStatus = calculatePaymentStatus(job);
-                  switch (paymentStatus.paymentStatus) {
-                    case "paid":
-                      return (
-                        <div className="flex items-center justify-center">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                        </div>
-                      );
-                    case "partial":
-                      return (
-                        <div className="flex items-center justify-center">
-                          <AlertCircle className="h-4 w-4 text-yellow-600" />
-                        </div>
-                      );
-                    case "pending":
-                      return (
-                        <div className="flex items-center justify-center">
-                          <XCircle className="h-4 w-4 text-red-600" />
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </TableCell>
               <TableCell className="py-1">
                 <div className="flex items-center justify-center gap-1">
                   <WhatsAppButton
@@ -175,6 +148,47 @@ export function JobTable({
                     jobId={job.id}
                     clientWhatsapp={job.client?.whatsapp || ""}
                   />
+                </div>
+              </TableCell>
+              <TableCell className="text-center py-1">
+                <div className="flex items-center justify-center gap-1">
+                  {(() => {
+                    const paymentStatus = calculatePaymentStatus(job);
+                    switch (paymentStatus.paymentStatus) {
+                      case "paid":
+                        return (
+                          <CheckCircle className="h-4 w-4 text-green-600" />
+                        );
+                      case "partial":
+                        return (
+                          <AlertCircle className="h-4 w-4 text-yellow-600" />
+                        );
+                      case "pending":
+                        return (
+                          <XCircle className="h-4 w-4 text-red-600" />
+                        );
+                      default:
+                        return null;
+                    }
+                  })()}
+                  {onAddPayment && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onAddPayment(job)}
+                      disabled={
+                        calculatePaymentStatus(job).paymentStatus === "paid"
+                      }
+                      className="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={
+                        calculatePaymentStatus(job).paymentStatus === "paid"
+                          ? "Trabajo pagado completamente"
+                          : "Agregar pago"
+                      }
+                    >
+                      <DollarSign className="h-3 w-3" />
+                    </Button>
+                  )}
                 </div>
               </TableCell>
               <TableCell className="py-1">
@@ -197,24 +211,6 @@ export function JobTable({
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
-                  {onAddPayment && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onAddPayment(job)}
-                      disabled={
-                        calculatePaymentStatus(job).paymentStatus === "paid"
-                      }
-                      className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      title={
-                        calculatePaymentStatus(job).paymentStatus === "paid"
-                          ? "Trabajo pagado completamente"
-                          : "Agregar pago"
-                      }
-                    >
-                      <DollarSign className="h-4 w-4" />
-                    </Button>
-                  )}
                   <Button
                     variant="ghost"
                     size="sm"
