@@ -211,10 +211,9 @@ export async function generateMessageContent(
 
   if (job.tipo === "tarjetas") {
     if (job.card_reference) {
-      // Usar las columnas que SÍ existen en la tabla
+      // Para tarjetas, solo mostrar el nombre
       const nombre = job.card_reference.nombre || "No especificado";
-      const grupo = job.card_reference.grupo || "No especificado";
-      caracteristicas = `${nombre} - ${grupo}`;
+      caracteristicas = nombre;
       console.log("Características desde card_reference:", caracteristicas);
     } else if (job.card_reference_id) {
       // Fallback: buscar en el array de cardReferences
@@ -223,8 +222,7 @@ export async function generateMessageContent(
       );
       if (cardRef) {
         const nombre = cardRef.nombre || "No especificado";
-        const grupo = cardRef.grupo || "No especificado";
-        caracteristicas = `${nombre} - ${grupo}`;
+        caracteristicas = nombre;
         console.log("Características desde fallback:", caracteristicas);
       } else {
         console.log(
