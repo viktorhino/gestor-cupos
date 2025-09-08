@@ -880,7 +880,7 @@ export function JobReceptionForm({
                 placeholder="Ej: Empresa ABC"
               />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="client-encargado">Encargado</Label>
@@ -901,7 +901,7 @@ export function JobReceptionForm({
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="client-whatsapp">WhatsApp *</Label>
               <Input
@@ -911,7 +911,7 @@ export function JobReceptionForm({
                 placeholder="Ej: 3001234567"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="client-observaciones">Observaciones</Label>
               <Textarea

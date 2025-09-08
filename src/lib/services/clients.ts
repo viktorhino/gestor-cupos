@@ -8,14 +8,20 @@ export class ClientService {
     const { data, error } = await this.supabase
       .from("clients")
       .select("*")
-      .order("nombre");
+      .order("empresa, nombre"); // Ordenar por empresa, con fallback a nombre
 
     if (error) {
       console.error("Error fetching clients:", error);
       return [];
     }
 
-    return data || [];
+    // Mapear los datos para asegurar que 'empresa' esté disponible
+    const mappedData = (data || []).map(client => ({
+      ...client,
+      empresa: client.empresa || client.nombre, // Usar empresa si existe, sino nombre
+    }));
+
+    return mappedData;
   }
 
   async getClient(id: string): Promise<Client | null> {
@@ -30,15 +36,21 @@ export class ClientService {
       return null;
     }
 
-    return data;
+    // Mapear los datos para asegurar que 'empresa' esté disponible
+    return {
+      ...data,
+      empresa: data.empresa || data.nombre, // Usar empresa si existe, sino nombre
+    };
   }
 
   async createClient(
     client: Omit<Client, "id" | "created_at" | "updated_at">
   ): Promise<Client | null> {
     // Limpiar campos undefined para evitar problemas con Supabase
+    // Temporalmente enviar datos a ambas columnas hasta que se complete la migración
     const cleanClient = {
-      empresa: client.empresa,
+      nombre: client.empresa, // Mantener compatibilidad con columna 'nombre'
+      empresa: client.empresa, // Nueva columna 'empresa'
       whatsapp: client.whatsapp,
       ...(client.encargado && { encargado: client.encargado }),
       ...(client.tratamiento && { tratamiento: client.tratamiento }),
