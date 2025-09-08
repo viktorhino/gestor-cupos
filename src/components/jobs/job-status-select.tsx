@@ -103,7 +103,7 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
         onValueChange={handleStatusChange}
         disabled={isChanging}
       >
-        <SelectTrigger className="w-[180px] h-8">
+        <SelectTrigger className="w-[140px] h-8">
           <SelectValue>
             <Badge variant={currentConfig.variant} className="text-xs">
               {currentConfig.label}
