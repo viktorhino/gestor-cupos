@@ -3,18 +3,21 @@
 ## Estructura de Ambientes
 
 ### 🚀 Producción (Production)
+
 - **Rama**: `main`
 - **URL**: `https://gestor-cupos.vercel.app`
 - **Base de datos**: Supabase Production
 - **Propósito**: Versión estable para usuarios finales
 
 ### 🧪 Staging (Pruebas)
+
 - **Rama**: `develop`
 - **URL**: `https://gestor-cupos-git-develop.vercel.app`
 - **Base de datos**: Supabase Staging
 - **Propósito**: Pruebas de integración antes de producción
 
 ### 💻 Desarrollo (Development)
+
 - **Rama**: `feature/*`
 - **URL**: `https://gestor-cupos-git-[branch-name].vercel.app`
 - **Base de datos**: Supabase Development
@@ -23,6 +26,7 @@
 ## Configuración de Variables de Entorno
 
 ### Desarrollo Local
+
 ```bash
 # Copiar archivo de ejemplo
 cp env.example .env.local
@@ -34,6 +38,7 @@ NEXT_PUBLIC_APP_ENV=development
 ```
 
 ### Vercel (Automático)
+
 - Las variables se configuran en el dashboard de Vercel
 - Se aplican automáticamente según el ambiente
 
