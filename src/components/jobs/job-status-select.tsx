@@ -54,13 +54,23 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
         // Generar mensaje WhatsApp si es necesario
         if (shouldGenerateMessage(newStatus)) {
           try {
-            const message = await whatsappService.processStateChange(
-              updatedJob,
-              newStatus
-            );
+            // Obtener el trabajo completo con todas las relaciones
+            const fullJob = await jobService.getJobById(job.id);
+            if (fullJob) {
+              // Actualizar el estado en el trabajo completo
+              const jobWithNewStatus = {
+                ...fullJob,
+                estado: newStatus as any,
+              };
 
-            if (message) {
-              toast.success("Mensaje WhatsApp generado");
+              const message = await whatsappService.processStateChange(
+                jobWithNewStatus,
+                newStatus
+              );
+
+              if (message) {
+                toast.success("Mensaje WhatsApp generado");
+              }
             }
           } catch (error) {
             console.error("Error generating WhatsApp message:", error);

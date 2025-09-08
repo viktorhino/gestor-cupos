@@ -11,6 +11,55 @@ let messageTemplatesCache: Record<string, string> = {};
 let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
+// Cache para datos de referencia
+let specialFinishesCache: any[] = [];
+let cardReferencesCache: any[] = [];
+let flyerTypesCache: any[] = [];
+let referenceCacheTimestamp: number = 0;
+
+/**
+ * Obtiene los datos de referencia necesarios para generar mensajes
+ */
+async function getReferenceData() {
+  const now = Date.now();
+  
+  // Verificar si el cache es válido
+  if (specialFinishesCache.length > 0 && (now - referenceCacheTimestamp) < CACHE_DURATION) {
+    return {
+      specialFinishes: specialFinishesCache,
+      cardReferences: cardReferencesCache,
+      flyerTypes: flyerTypesCache,
+    };
+  }
+
+  try {
+    const supabase = createClient();
+    const [specialFinishesResult, cardReferencesResult, flyerTypesResult] = await Promise.all([
+      supabase.from("card_special_finishes").select("*"),
+      supabase.from("card_references").select("*"),
+      supabase.from("flyer_types").select("*"),
+    ]);
+
+    specialFinishesCache = specialFinishesResult.data || [];
+    cardReferencesCache = cardReferencesResult.data || [];
+    flyerTypesCache = flyerTypesResult.data || [];
+    referenceCacheTimestamp = now;
+
+    return {
+      specialFinishes: specialFinishesCache,
+      cardReferences: cardReferencesCache,
+      flyerTypes: flyerTypesCache,
+    };
+  } catch (error) {
+    console.error("Error fetching reference data:", error);
+    return {
+      specialFinishes: [],
+      cardReferences: [],
+      flyerTypes: [],
+    };
+  }
+}
+
 /**
  * Obtiene las plantillas de mensajes desde la base de datos
  */
@@ -110,6 +159,9 @@ export async function generateMessageContent(
     throw new Error(`No hay plantilla definida para el estado: ${estado}`);
   }
 
+  // Obtener datos de referencia
+  const { specialFinishes, cardReferences, flyerTypes } = await getReferenceData();
+
   // Obtener datos del cliente
   const tratamiento =
     job.client?.tratamiento || job.client?.empresa || "Cliente";
@@ -121,14 +173,20 @@ export async function generateMessageContent(
 
   // Generar información de caracteristicas (terminación/tamaño-tintas)
   let caracteristicas = "No especificado";
-  if (job.tipo === "tarjetas" && job.card_reference) {
-    const terminacion = job.card_reference.terminacion || "No especificado";
-    const tamaño = job.card_reference.tamaño || "No especificado";
-    caracteristicas = `${terminacion} - ${tamaño}`;
-  } else if (job.tipo === "volantes" && job.flyer_type) {
-    const tamaño = job.flyer_type.tamaño || "No especificado";
-    const modo = job.flyer_type.modo || "No especificado";
-    caracteristicas = `${tamaño} - ${modo}`;
+  if (job.tipo === "tarjetas" && job.card_reference_id) {
+    const cardRef = cardReferences.find(cr => cr.id === job.card_reference_id);
+    if (cardRef) {
+      const terminacion = cardRef.terminacion || "No especificado";
+      const tamaño = cardRef.tamaño || "No especificado";
+      caracteristicas = `${terminacion} - ${tamaño}`;
+    }
+  } else if (job.tipo === "volantes" && job.flyer_type_id) {
+    const flyerType = flyerTypes.find(ft => ft.id === job.flyer_type_id);
+    if (flyerType) {
+      const tamaño = flyerType.tamaño || "No especificado";
+      const modo = flyerType.modo || "No especificado";
+      caracteristicas = `${tamaño} - ${modo}`;
+    }
   }
 
   // Generar información de millares
@@ -144,12 +202,17 @@ export async function generateMessageContent(
     Array.isArray(job.terminaciones_especiales) &&
     job.terminaciones_especiales.length > 0
   ) {
-    const terminacionesValidas = job.terminaciones_especiales.filter(
-      (t) => t && t.nombre
-    );
+    const terminacionesValidas = job.terminaciones_especiales
+      .filter((t) => t && t.tipo)
+      .map((t) => {
+        const specialFinish = specialFinishes.find(sf => sf.id === t.tipo);
+        return specialFinish ? specialFinish.nombre : t.tipo;
+      })
+      .filter(nombre => nombre);
+    
     if (terminacionesValidas.length > 0) {
       terminacionesEspeciales = terminacionesValidas
-        .map((t) => `- ${t.nombre}`)
+        .map((nombre) => `- ${nombre}`)
         .join("\n");
     }
   }

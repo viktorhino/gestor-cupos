@@ -390,12 +390,12 @@ export function JobReceptionForm({
       } else {
         // Crear nuevo trabajo
         const imageBase64 = data.imagen_url;
-        
+
         // Si hay imagen base64, crear trabajo sin imagen primero
-        if (imageBase64 && imageBase64.startsWith('data:image/')) {
+        if (imageBase64 && imageBase64.startsWith("data:image/")) {
           data.imagen_url = ""; // Limpiar imagen temporal
         }
-        
+
         const job = await jobService.createJob(data);
         if (!job) {
           toast.error("Error al crear el trabajo");
@@ -403,13 +403,15 @@ export function JobReceptionForm({
         }
 
         // Si había imagen base64, subirla ahora que tenemos el jobId
-        if (imageBase64 && imageBase64.startsWith('data:image/')) {
+        if (imageBase64 && imageBase64.startsWith("data:image/")) {
           try {
             // Convertir base64 a File
             const response = await fetch(imageBase64);
             const blob = await response.blob();
-            const file = new File([blob], 'work-image.png', { type: 'image/png' });
-            
+            const file = new File([blob], "work-image.png", {
+              type: "image/png",
+            });
+
             // Subir imagen a Supabase Storage
             const imageUrl = await storageService.uploadWorkImage(file, job.id);
             if (imageUrl) {
