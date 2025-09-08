@@ -1,7 +1,7 @@
 "use client";
 
 // Forzar renderizado dinámico para evitar problemas con variables de entorno
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { MainLayout } from "@/components/layout/main-layout";

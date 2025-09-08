@@ -1,1 +1,1 @@
-Force Vercel update - $(date)
+Force Vercel to use latest commit with dynamic pages fix - $(date)
