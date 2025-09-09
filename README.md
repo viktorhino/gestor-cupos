@@ -224,3 +224,8 @@ Para soporte técnico o consultas:
 - **Desarrollo**: Rama `develop` - Esquema `development`
 - **Staging**: Rama `staging` - Esquema `staging`  
 - **Producción**: Rama `main` - Esquema `public`
+
+### 🚀 Deploy Status
+- **Development**: ✅ Funcionando
+- **Staging**: 🔄 En proceso de deploy
+- **Production**: ✅ Funcionando
