@@ -218,3 +218,9 @@ Para soporte técnico o consultas:
 ---
 
 **T&V Impresiones** - Sistema de Gestión de Producción v1.0
+
+## 🌍 Ambientes
+
+- **Desarrollo**: Rama `develop` - Esquema `development`
+- **Staging**: Rama `staging` - Esquema `staging`  
+- **Producción**: Rama `main` - Esquema `public`
