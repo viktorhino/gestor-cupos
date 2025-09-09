@@ -1,4 +1,13 @@
 {
+  "name": "gestor-cupos",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@supabase/ssr": "^0.7.0",
