@@ -35,6 +35,5 @@ export const TABLES = {
 // Configuración simplificada de Supabase
 export const supabaseConfig = {
   url: "https://dabffkglfwdjfaanzpkm.supabase.co",
-  anonKey:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhYmZma2dsZndkamZhYW56cGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ2NzQ4NzEsImV4cCI6MjA1MDI1MDg3MX0.placeholder",
+  anonKey: "REEMPLAZA_CON_TU_CLAVE_REAL_AQUI",
 };
