@@ -222,10 +222,16 @@ Para soporte técnico o consultas:
 ## 🌍 Ambientes
 
 - **Desarrollo**: Rama `develop` - Esquema `development`
-- **Staging**: Rama `staging` - Esquema `staging`  
+- **Staging**: Rama `staging` - Esquema `staging`
 - **Producción**: Rama `main` - Esquema `public`
 
 ### 🚀 Deploy Status
+
 - **Development**: ✅ Funcionando
-- **Staging**: 🔄 En proceso de deploy
+- **Staging**: 🔄 En proceso de deploy (Commit: e1357bd)
 - **Production**: ✅ Funcionando
+
+### 🔧 Troubleshooting
+- **Vercel**: No detecta commits recientes
+- **GitHub**: Commits subidos correctamente
+- **Solución**: Forzar redeploy manual
