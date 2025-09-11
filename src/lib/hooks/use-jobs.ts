@@ -15,7 +15,6 @@ export function useJobs() {
       setError(null);
     } catch (err) {
       setError("Error al cargar trabajos");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -45,7 +44,6 @@ export function useJobsByStatus(status: string) {
       setError(null);
     } catch (err) {
       setError("Error al cargar trabajos");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -61,6 +59,3 @@ export function useJobsByStatus(status: string) {
 
   return { jobs, loading, error, refreshJobs };
 }
-
-
-

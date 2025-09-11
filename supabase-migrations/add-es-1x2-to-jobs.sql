@@ -8,3 +8,6 @@ ADD COLUMN es_1x2 BOOLEAN DEFAULT FALSE;
 COMMENT ON COLUMN jobs.es_1x2 IS 'Indica si el precio base debe calcularse dividiendo los millares entre 2. No afecta el cálculo de terminaciones especiales.';
 
 
+
+
+

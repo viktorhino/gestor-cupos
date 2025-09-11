@@ -96,7 +96,6 @@ export function AddPaymentModal({
       onPaymentAdded?.();
       onClose();
     } catch (error) {
-      console.error("Error adding payment:", error);
       toast.error("Error al agregar el pago");
     } finally {
       setLoading(false);
@@ -128,6 +127,9 @@ export function AddPaymentModal({
             <CreditCard className="h-5 w-5 text-blue-600" />
             Agregar Pago
           </DialogTitle>
+          <DialogDescription>
+            Registre un nuevo pago para este trabajo
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

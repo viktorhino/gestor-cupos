@@ -3,6 +3,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -34,6 +35,11 @@ export function JobFormModal({
           <DialogTitle>
             {job ? "Editar Trabajo" : "Agregar Nuevo Trabajo"}
           </DialogTitle>
+          <DialogDescription>
+            {job
+              ? "Modifica los detalles del trabajo existente"
+              : "Complete la información para crear un nuevo trabajo de producción"}
+          </DialogDescription>
         </DialogHeader>
         <div className="mt-4">
           <JobReceptionForm
@@ -46,6 +52,3 @@ export function JobFormModal({
     </Dialog>
   );
 }
-
-
-

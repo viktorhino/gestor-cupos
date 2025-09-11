@@ -13,3 +13,6 @@ COMMENT ON COLUMN jobs.descuento IS 'Descuento aplicado al trabajo en pesos colo
 -- Note: This will be handled in the application logic, not in the database
 
 
+
+
+

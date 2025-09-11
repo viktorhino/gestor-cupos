@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -119,6 +120,10 @@ export function MessageHistory({
             <MessageSquareMore className="h-5 w-5" />
             Historial de Mensajes WhatsApp
           </DialogTitle>
+          <DialogDescription>
+            Visualiza y gestiona el historial de mensajes WhatsApp enviados para
+            este trabajo
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[60vh] pr-4">

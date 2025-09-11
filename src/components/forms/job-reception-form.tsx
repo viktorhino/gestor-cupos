@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -67,21 +68,39 @@ import { whatsappService } from "@/lib/services/whatsapp-service";
 import { JobWithDetails } from "@/lib/types/database";
 
 // Schema simplificado - solo datos de producción
-const jobFormSchema = z.object({
-  client_id: z.string().min(1, "Debe seleccionar un cliente"),
-  nombre_trabajo: z.string().min(1, "Debe ingresar el nombre del trabajo"),
-  tipo: z.enum(["tarjetas", "volantes"]),
-  card_reference_id: z.string().optional(),
-  flyer_type_id: z.string().optional().or(z.literal("")),
-  ocupacion_cupo: z.number().min(1),
-  cantidad_millares: z.number().min(1),
-  es_1x2: z.boolean().default(false),
-  terminaciones_especiales: z.array(z.any()).default([]),
-  observaciones: z.string().optional(),
-  imagen_url: z.string().optional(),
-  notas: z.string().optional(),
-  descuento: z.number().min(0).optional(),
-});
+const jobFormSchema = z
+  .object({
+    client_id: z.string().min(1, "Debe seleccionar un cliente"),
+    nombre_trabajo: z.string().min(1, "Debe ingresar el nombre del trabajo"),
+    tipo: z.enum(["tarjetas", "volantes"]),
+    card_reference_id: z.string().optional(),
+    flyer_type_id: z.string().optional(),
+    ocupacion_cupo: z.number().min(1, "Debe ser mayor a 0"),
+    cantidad_millares: z.number().min(1, "Debe ser mayor a 0"),
+    es_1x2: z.boolean().default(false),
+    terminaciones_especiales: z.array(z.any()).default([]),
+    observaciones: z.string().optional(),
+    imagen_url: z.string().optional(),
+    notas: z.string().optional(),
+    descuento: z.number().min(0).optional(),
+  })
+  .refine(
+    (data) => {
+      // Validación condicional: si es tarjetas, debe tener card_reference_id
+      if (data.tipo === "tarjetas" && !data.card_reference_id) {
+        return false;
+      }
+      // Si es volantes, debe tener flyer_type_id
+      if (data.tipo === "volantes" && !data.flyer_type_id) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Debe seleccionar una referencia para el tipo de trabajo",
+      path: ["card_reference_id"], // Esto se mostrará en el campo correspondiente
+    }
+  );
 
 interface JobReceptionFormProps {
   initialData?: JobWithDetails | null;
@@ -160,7 +179,6 @@ export function JobReceptionForm({
 
   // Seleccionar cliente
   const selectClient = (client: any) => {
-    console.log("Selecting client:", client.empresa, "ID:", client.id);
     form.setValue("client_id", client.id);
     setSelectedClient(client.empresa);
     setClientComboOpen(false);
@@ -176,7 +194,6 @@ export function JobReceptionForm({
 
   // Manejar cliente creado exitosamente
   const handleClientCreated = async (newClient: any) => {
-    console.log("New client created:", newClient);
     await refreshClients();
     selectClient(newClient);
     setNewClientDialog(false);
@@ -193,8 +210,6 @@ export function JobReceptionForm({
           whatsapp: newClientWhatsapp,
           notas: newClientObservaciones || undefined,
         };
-
-        console.log("Creating client with data:", clientData);
 
         const newClient = await createClient(clientData);
 
@@ -214,7 +229,6 @@ export function JobReceptionForm({
           );
         }
       } catch (error) {
-        console.error("Error creating client:", error);
         toast.error("Error al crear el cliente");
       }
     }
@@ -222,6 +236,7 @@ export function JobReceptionForm({
 
   const form = useForm({
     resolver: zodResolver(jobFormSchema),
+    mode: "onChange", // Validación en tiempo real
     defaultValues: {
       client_id: "",
       nombre_trabajo: "",
@@ -240,8 +255,6 @@ export function JobReceptionForm({
   // Precargar datos del trabajo existente
   useEffect(() => {
     if (initialData) {
-      console.log("Precargando datos del trabajo:", initialData);
-
       // Precargar datos básicos
       form.setValue("client_id", initialData.client_id);
       form.setValue("nombre_trabajo", initialData.nombre_trabajo || "");
@@ -273,8 +286,6 @@ export function JobReceptionForm({
       if (initialData.client) {
         setSelectedClient(initialData.client.empresa);
       }
-
-      console.log("Datos precargados exitosamente");
     }
   }, [initialData, form]);
 
@@ -286,7 +297,6 @@ export function JobReceptionForm({
   useEffect(() => {
     const loadData = async () => {
       try {
-        console.log("Loading form data...");
         const [cardRefs, flyerTypesData, specialFinishesData] =
           await Promise.all([
             cardReferenceService.getCardReferences(),
@@ -301,7 +311,6 @@ export function JobReceptionForm({
         setSpecialFinishes(specialFinishesData);
         setLoading(false);
       } catch (error) {
-        console.error("Error loading data:", error);
         setLoading(false);
       }
     };
@@ -376,8 +385,6 @@ export function JobReceptionForm({
 
   const onSubmit = async (data: any) => {
     try {
-      console.log("Submitting job form:", data);
-
       if (initialData) {
         // Editar trabajo existente
         const updatedJob = await jobService.updateJob(initialData.id, data);
@@ -420,7 +427,6 @@ export function JobReceptionForm({
               await jobService.updateJob(job.id, { imagen_url: imageUrl });
             }
           } catch (error) {
-            console.error("Error uploading image:", error);
             toast.warning("Trabajo creado pero hubo un problema con la imagen");
           }
         }
@@ -430,20 +436,30 @@ export function JobReceptionForm({
           // Obtener el trabajo completo con todas las relaciones
           const fullJob = await jobService.getJobById(job.id);
           if (fullJob) {
-            await whatsappService.processStateChange(fullJob, "recibido");
+            // Convertir JobWithDetails a JobWithWhatsApp agregando whatsapp_messages vacío
+            const jobWithWhatsApp = {
+              ...fullJob,
+              whatsapp_messages: [],
+            };
+            await whatsappService.processStateChange(
+              jobWithWhatsApp,
+              "recibido"
+            );
             toast.success("Mensaje de WhatsApp generado automáticamente");
           }
         } catch (error) {
-          console.error("Error generating WhatsApp message:", error);
-          // No mostrar error al usuario, solo log
+          // No mostrar error al usuario
         }
 
         toast.success("Trabajo creado exitosamente");
         onJobSaved?.(job as JobWithDetails);
       }
     } catch (error) {
-      console.error("Error in onSubmit:", error);
+      console.error("Error en onSubmit:", error);
       toast.error("Error al procesar el formulario");
+    } finally {
+      // Asegurar que el formulario salga del estado de submitting
+      form.reset();
     }
   };
 
@@ -458,10 +474,33 @@ export function JobReceptionForm({
           <DialogTitle>
             {initialData ? "Editar Trabajo" : "Agregar Trabajo"}
           </DialogTitle>
+          <DialogDescription>
+            {initialData
+              ? "Modifica los detalles del trabajo existente"
+              : "Complete la información para crear un nuevo trabajo de producción"}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              // Mostrar errores específicos
+              const errorMessages = Object.entries(errors).map(
+                ([field, error]) => {
+                  return `${field}: ${error?.message || "Campo requerido"}`;
+                }
+              );
+
+              if (errorMessages.length > 0) {
+                toast.error(
+                  `Errores de validación: ${errorMessages.join(", ")}`
+                );
+              } else {
+                toast.error("Por favor, completa todos los campos requeridos");
+              }
+            })}
+            className="space-y-4"
+          >
             {/* Información del Cliente */}
             <Card className="bg-white">
               <CardContent className="space-y-4 px-6 py-2.5">
@@ -616,7 +655,7 @@ export function JobReceptionForm({
                           <FormLabel>Terminación *</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            value={field.value}
+                            value={field.value || ""}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -644,7 +683,7 @@ export function JobReceptionForm({
                           <FormLabel>Tamaño y Tintas *</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            value={field.value}
+                            value={field.value || ""}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -898,8 +937,18 @@ export function JobReceptionForm({
                 <Button type="button" variant="outline">
                   Imprimir OdeW
                 </Button>
-                <Button type="submit">
-                  {initialData ? "Actualizar Trabajo" : "Registrar Trabajo"}
+                <Button
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                  onClick={() => {
+                    // Botón de envío clickeado
+                  }}
+                >
+                  {form.formState.isSubmitting
+                    ? "Procesando..."
+                    : initialData
+                    ? "Actualizar Trabajo"
+                    : "Registrar Trabajo"}
                 </Button>
               </div>
             </div>
@@ -912,6 +961,9 @@ export function JobReceptionForm({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Agregar Nuevo Cliente</DialogTitle>
+            <DialogDescription>
+              Complete la información del cliente para poder asignar el trabajo
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-2">

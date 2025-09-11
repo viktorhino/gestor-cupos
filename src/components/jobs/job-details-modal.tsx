@@ -57,7 +57,7 @@ export function JobDetailsModal({
         const finishes = await specialFinishService.getSpecialFinishes();
         setSpecialFinishes(finishes);
       } catch (error) {
-        console.error("Error loading special finishes:", error);
+        // Error loading special finishes
       }
     };
 
@@ -76,7 +76,7 @@ export function JobDetailsModal({
         const jobPayments = await jobService.getJobPayments(job.id);
         setPayments(jobPayments);
       } catch (error) {
-        console.error("Error loading payments:", error);
+        // Error loading payments
       } finally {
         setLoadingPayments(false);
       }
@@ -213,6 +213,9 @@ export function JobDetailsModal({
               )}
             </div>
           </DialogTitle>
+          <DialogDescription>
+            Detalles completos del trabajo de producción
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

@@ -24,13 +24,11 @@ export class PaymentService {
         .single();
 
       if (error) {
-        console.error("Error creating payment:", error);
         return null;
       }
 
       return data;
     } catch (err) {
-      console.error("Exception creating payment:", err);
       return null;
     }
   }
@@ -56,13 +54,11 @@ export class PaymentService {
         .single();
 
       if (error) {
-        console.error("Error updating payment:", error);
         return null;
       }
 
       return data;
     } catch (err) {
-      console.error("Exception updating payment:", err);
       return null;
     }
   }
@@ -76,13 +72,11 @@ export class PaymentService {
         .order("fecha", { ascending: false });
 
       if (error) {
-        console.error("Error fetching payments:", error);
         return [];
       }
 
       return data || [];
     } catch (err) {
-      console.error("Exception fetching payments:", err);
       return [];
     }
   }
@@ -95,13 +89,11 @@ export class PaymentService {
         .eq("id", paymentId);
 
       if (error) {
-        console.error("Error deleting payment:", error);
         return false;
       }
 
       return true;
     } catch (err) {
-      console.error("Exception deleting payment:", err);
       return false;
     }
   }

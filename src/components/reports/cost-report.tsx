@@ -188,18 +188,15 @@ export function CostReport() {
   ]);
 
   const handleGenerateReport = () => {
-    console.log("Generando reporte de costos...", {
-      dateRange,
-      selectedPeriod,
-    });
+    // Generar reporte de costos
   };
 
   const handleExportPDF = () => {
-    console.log("Exportando reporte de costos a PDF...");
+    // Exportar reporte de costos a PDF
   };
 
   const handleExportExcel = () => {
-    console.log("Exportando reporte de costos a Excel...");
+    // Exportar reporte de costos a Excel
   };
 
   const getMarginBadgeVariant = (percentage: number) => {
@@ -467,6 +464,3 @@ export function CostReport() {
     </div>
   );
 }
-
-
-

@@ -260,6 +260,20 @@ export async function generateMessageContent(
     saldoPendiente = `$${paymentStatus.remainingBalance.toLocaleString()}`;
   }
 
+  // Generar URL de seguimiento para estado recibido
+  let urlSeguimiento = "";
+  if (estado === "recibido" && job.tracking_token) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    urlSeguimiento = `\n\n🔗 *Seguimiento en tiempo real:*
+Puedes consultar el estado de tu trabajo en cualquier momento en:
+${baseUrl}/track/${job.tracking_token}
+
+📱 *¿Cómo usar el enlace?*
+1. Toca el enlace de arriba
+2. Verás el progreso de tu trabajo
+3. No necesitas registrarte ni loguearte`;
+  }
+
   // Reemplazar variables en la plantilla
   let content = template
     .replace(/\{\{tratamiento\}\}/g, tratamiento)
@@ -270,7 +284,8 @@ export async function generateMessageContent(
     .replace(/\{\{terminaciones_especiales\}\}/g, terminacionesEspeciales)
     .replace(/\{\{observaciones\}\}/g, observaciones)
     .replace(/\{\{imagen_trabajo\}\}/g, imagenTrabajo)
-    .replace(/\{\{saldo_pendiente\}\}/g, saldoPendiente);
+    .replace(/\{\{saldo_pendiente\}\}/g, saldoPendiente)
+    .replace(/\{\{url-de-seguimiento\}\}/g, urlSeguimiento);
 
   return content;
 }
@@ -337,4 +352,57 @@ export function generateWhatsAppLink(
     "+",
     ""
   )}?text=${encodedMessage}`;
+}
+
+/**
+ * Genera mensaje de seguimiento para cliente
+ */
+export async function generateTrackingMessage(
+  job: JobWithDetails
+): Promise<string> {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const trackingUrl = `${baseUrl}/track/${job.tracking_token}`;
+
+  const message = `🎯 *Seguimiento de tu Trabajo - T&V Cupos*
+
+Hola ${job.cliente_nombre}! 👋
+
+Tu trabajo ha sido registrado exitosamente:
+
+📋 *Detalles:*
+• Trabajo: ${job.trabajo}
+• Millares: ${job.millares.toLocaleString()}
+• Consecutivo: #${job.consecutivo}
+• Estado actual: ${getEstadoLabel(job.estado)}
+
+🔗 *Seguimiento en tiempo real:*
+Puedes consultar el estado de tu trabajo en cualquier momento en:
+${trackingUrl}
+
+📱 *¿Cómo usar el enlace?*
+1. Toca el enlace de arriba
+2. Verás el progreso de tu trabajo
+3. No necesitas registrarte ni loguearte
+
+¡Gracias por confiar en nosotros! 🙏
+
+---
+T&V Cupos - Gestión de Producción`;
+
+  return message;
+}
+
+/**
+ * Obtiene la etiqueta del estado para mostrar en mensajes
+ */
+function getEstadoLabel(estado: string): string {
+  const estados: Record<string, string> = {
+    recibido: "Recibido",
+    finalizado: "Finalizado",
+    montado: "Montado",
+    impreso: "Impreso",
+    empacado: "Empacado",
+  };
+
+  return estados[estado] || estado;
 }

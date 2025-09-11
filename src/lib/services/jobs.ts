@@ -21,7 +21,6 @@ export class JobService {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Error fetching jobs:", error);
       return [];
     }
 
@@ -46,7 +45,6 @@ export class JobService {
       .single();
 
     if (error) {
-      console.error("Error fetching job:", error);
       return null;
     }
 
@@ -75,18 +73,17 @@ export class JobService {
             es_1x2: jobData.es_1x2 || false,
             terminaciones_especiales: jobData.terminaciones_especiales || [],
             observaciones: jobData.observaciones,
+            // El tracking_token se generará automáticamente por el trigger
           },
         ])
         .select()
         .single();
 
       if (error) {
-        console.error("Error creating job:", error);
         return null;
       }
       return data;
     } catch (error) {
-      console.error("Exception in createJob:", error);
       return null;
     }
   }
@@ -97,9 +94,6 @@ export class JobService {
     jobData: Partial<JobFormData>
   ): Promise<Job | null> {
     try {
-      console.log("Updating job with ID:", jobId);
-      console.log("Job data to update:", jobData);
-
       // Filtrar campos undefined para evitar errores en Supabase
       const updateData: any = {};
 
@@ -126,8 +120,6 @@ export class JobService {
       if (jobData.observaciones !== undefined)
         updateData.observaciones = jobData.observaciones;
 
-      console.log("Filtered update data:", updateData);
-
       const { data, error } = await this.supabase
         .from("jobs")
         .update(updateData)
@@ -136,37 +128,54 @@ export class JobService {
         .single();
 
       if (error) {
-        console.error("Error updating job:", error);
-        console.error("Error details:", JSON.stringify(error, null, 2));
-        console.error(
-          "Update data that failed:",
-          JSON.stringify(updateData, null, 2)
-        );
-        console.error("Job ID:", jobId);
         return null;
       }
 
-      console.log("Job updated successfully:", data);
       return data;
     } catch (error) {
-      console.error("Exception in updateJob:", error);
       return null;
     }
   }
 
-  // Actualizar estado del trabajo
+  // Actualizar estado del trabajo con retry logic
   async updateJobStatus(id: string, status: string): Promise<boolean> {
-    const { error } = await this.supabase
-      .from("jobs")
-      .update({ estado: status })
-      .eq("id", id);
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1 segundo
 
-    if (error) {
-      console.error("Error updating job status:", error);
-      return false;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const { error } = await this.supabase
+          .from("jobs")
+          .update({ estado: status })
+          .eq("id", id);
+
+        if (!error) {
+          return true;
+        }
+
+        // Si es el último intento, devolver false
+        if (attempt === maxRetries) {
+          return false;
+        }
+
+        // Esperar antes del siguiente intento
+        await new Promise((resolve) =>
+          setTimeout(resolve, retryDelay * attempt)
+        );
+      } catch (error) {
+        // Si es el último intento, devolver false
+        if (attempt === maxRetries) {
+          return false;
+        }
+
+        // Esperar antes del siguiente intento
+        await new Promise((resolve) =>
+          setTimeout(resolve, retryDelay * attempt)
+        );
+      }
     }
 
-    return true;
+    return false;
   }
 
   // Eliminar trabajo
@@ -174,7 +183,6 @@ export class JobService {
     const { error } = await this.supabase.from("jobs").delete().eq("id", jobId);
 
     if (error) {
-      console.error("Error deleting job:", error);
       return false;
     }
 
@@ -207,19 +215,11 @@ export class JobService {
         .single();
 
       if (error) {
-        console.error("Error creating payment:", error);
-        console.error("Error details:", {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code,
-        });
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Exception in createPayment:", error);
       return null;
     }
   }
@@ -234,13 +234,11 @@ export class JobService {
         .order("fecha", { ascending: false });
 
       if (error) {
-        console.error("Error fetching job payments:", error);
         return [];
       }
 
       return data || [];
     } catch (error) {
-      console.error("Exception in getJobPayments:", error);
       return [];
     }
   }
@@ -254,40 +252,41 @@ export class JobService {
         .eq("id", paymentId);
 
       if (error) {
-        console.error("Error deleting payment:", error);
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error("Exception in deletePayment:", error);
       return false;
     }
   }
 
   // Obtener trabajos por estado
   async getJobsByStatus(status: string): Promise<JobWithDetails[]> {
-    const { data, error } = await this.supabase
-      .from("jobs")
-      .select(
+    try {
+      const { data, error } = await this.supabase
+        .from("jobs")
+        .select(
+          `
+          *,
+          client:clients(*),
+          card_reference:card_references(*),
+          flyer_type:flyer_types(*),
+          payments:payments(*),
+          deliveries:deliveries(*)
         `
-        *,
-        client:clients(*),
-        card_reference:card_references(*),
-        flyer_type:flyer_types(*),
-        payments:payments(*),
-        deliveries:deliveries(*)
-      `
-      )
-      .eq("estado", status)
-      .order("created_at", { ascending: false });
+        )
+        .eq("estado", status)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching jobs by status:", error);
+      if (error) {
+        return [];
+      }
+
+      return data || [];
+    } catch (err) {
       return [];
     }
-
-    return data || [];
   }
 
   // Obtener trabajos por cliente
@@ -308,7 +307,6 @@ export class JobService {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Error fetching jobs by client:", error);
       return [];
     }
 

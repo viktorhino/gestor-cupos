@@ -25,3 +25,6 @@ WHERE table_name = 'jobs'
 ORDER BY ordinal_position;
 
 
+
+
+

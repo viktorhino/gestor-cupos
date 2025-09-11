@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Settings,
   Users,
@@ -16,10 +17,12 @@ import {
   DollarSign,
   Printer,
   BarChart3,
+  ArrowRight,
 } from "lucide-react";
 import { CardPrices } from "@/components/admin/card-prices";
 import { SpecialFinishes } from "@/components/admin/special-finishes";
 import { FlyerPrices } from "@/components/admin/flyer-prices";
+import Link from "next/link";
 
 export default function AdminPage() {
   return (
@@ -200,9 +203,32 @@ export default function AdminPage() {
                       <CardTitle className="text-base">Usuarios</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        Lista de usuarios del sistema
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Gestiona usuarios y permisos del sistema
                       </p>
+                      <Button asChild size="sm" variant="outline">
+                        <Link href="/admin/users">
+                          Gestionar Usuarios
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Permisos</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Configura permisos y accesos por rol
+                      </p>
+                      <Button asChild size="sm" variant="outline">
+                        <Link href="/admin/permissions">
+                          Gestionar Permisos
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </CardContent>
                   </Card>
 

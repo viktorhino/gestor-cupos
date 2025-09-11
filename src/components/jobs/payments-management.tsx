@@ -16,6 +16,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -104,7 +105,6 @@ export function PaymentsManagement() {
       setJobs(jobsWithPayments);
       setFilteredJobs(jobsWithPayments);
     } catch (error) {
-      console.error("Error loading jobs:", error);
       toast.error("Error al cargar los trabajos");
     } finally {
       setLoading(false);
@@ -154,7 +154,6 @@ export function PaymentsManagement() {
       setNewPayment({ monto: 0, metodo: "efectivo", observacion: "" });
       await loadJobs(); // Recargar datos
     } catch (error) {
-      console.error("Error adding payment:", error);
       toast.error("Error al agregar el pago");
     }
   };
@@ -175,7 +174,6 @@ export function PaymentsManagement() {
       toast.success("Trabajo marcado como pagado");
       await loadJobs(); // Recargar datos
     } catch (error) {
-      console.error("Error marking as paid:", error);
       toast.error("Error al marcar como pagado");
     }
   };
@@ -436,6 +434,9 @@ export function PaymentsManagement() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Agregar Pago</DialogTitle>
+            <DialogDescription>
+              Registre un nuevo pago para el trabajo seleccionado
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             {selectedJob && (
@@ -525,6 +526,9 @@ export function PaymentsManagement() {
               <ImageIcon className="h-5 w-5 text-blue-600" />
               Comprobante de Pago
             </DialogTitle>
+            <DialogDescription>
+              Visualice el comprobante de pago subido
+            </DialogDescription>
           </DialogHeader>
           {selectedImageUrl && (
             <div className="space-y-4">

@@ -40,9 +40,12 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
 
     try {
       setIsChanging(true);
+      console.log("Iniciando cambio de estado:", { jobId: job.id, newStatus });
+
       const success = await jobService.updateJobStatus(job.id, newStatus);
 
       if (success) {
+        console.log("Estado actualizado exitosamente");
         toast.success("Estado actualizado exitosamente");
 
         // Crear un objeto actualizado para el callback
@@ -53,6 +56,7 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
 
         // Generar mensaje WhatsApp si es necesario
         if (shouldGenerateMessage(newStatus)) {
+          console.log("Generando mensaje WhatsApp para estado:", newStatus);
           try {
             // Obtener el trabajo completo con todas las relaciones
             const fullJob = await jobService.getJobById(job.id);
@@ -69,11 +73,12 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
               );
 
               if (message) {
+                console.log("Mensaje WhatsApp generado exitosamente");
                 toast.success("Mensaje WhatsApp generado");
               }
             }
           } catch (error) {
-            console.error("Error generating WhatsApp message:", error);
+            console.error("Error generando mensaje WhatsApp:", error);
             toast.error("Estado actualizado, pero error al generar mensaje");
           }
         }
@@ -82,12 +87,14 @@ export function JobStatusSelect({ job, onStatusChange }: JobStatusSelectProps) {
           onStatusChange(updatedJob);
         }
       } else {
+        console.error("Error al actualizar el estado");
         toast.error("Error al actualizar el estado");
       }
     } catch (error) {
-      console.error("Error updating job status:", error);
+      console.error("Error en handleStatusChange:", error);
       toast.error("Error al actualizar el estado");
     } finally {
+      console.log("Finalizando cambio de estado, isChanging = false");
       setIsChanging(false);
     }
   };

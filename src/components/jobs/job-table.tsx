@@ -141,7 +141,6 @@ export function JobTable({
                     clientWhatsapp={job.client?.whatsapp || ""}
                     onMessageCopied={() => {
                       // Recargar la tabla si es necesario
-                      console.log("Mensaje copiado para trabajo:", job.id);
                     }}
                   />
                   <MessageHistory

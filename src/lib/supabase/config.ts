@@ -37,4 +37,5 @@ export const supabaseConfig = {
   url: "https://dabffkglfwdjfaanzpkm.supabase.co",
   anonKey:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhYmZma2dsZndkamZhYW56cGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NDM4NTAsImV4cCI6MjA3MjUxOTg1MH0.wtzyByyMTbiSy4lnNtmM6_x3tYE8IykZU7FYQJeqajE",
+  schema: process.env.NEXT_PUBLIC_DATABASE_SCHEMA || "public",
 };

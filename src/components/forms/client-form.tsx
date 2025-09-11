@@ -125,6 +125,11 @@ export function ClientForm({
           <DialogTitle>
             {client ? "Editar Cliente" : "Nuevo Cliente"}
           </DialogTitle>
+          <DialogDescription>
+            {client
+              ? "Modifica la información del cliente"
+              : "Complete la información para crear un nuevo cliente"}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,7 +153,6 @@ export function ClientForm({
                 className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
                 onClick={() => {
                   // TODO(stagewise): Implementar subida de imágenes
-                  console.log("Función de subida de imagen pendiente");
                 }}
               >
                 <Upload className="h-4 w-4" />

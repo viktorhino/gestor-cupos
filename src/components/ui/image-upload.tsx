@@ -60,7 +60,6 @@ export function ImageUpload({
           onChange(base64);
         }
       } catch (error) {
-        console.error("Error processing file:", error);
         alert("Error al procesar la imagen");
         setPreviewUrl("");
       } finally {

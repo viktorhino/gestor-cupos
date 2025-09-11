@@ -109,19 +109,19 @@ export class WhatsAppService {
         .eq("job_id", jobId)
         .eq("is_copied", false)
         .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
+        .limit(1);
 
       if (error) {
-        // No hay mensajes pendientes
-        if (error.code === "PGRST116") {
-          return null;
-        }
         console.error("Error fetching last pending message:", error);
         return null;
       }
 
-      return data;
+      // Si no hay datos o el array está vacío, retornar null
+      if (!data || data.length === 0) {
+        return null;
+      }
+
+      return data[0];
     } catch (error) {
       console.error("Error fetching last pending message:", error);
       return null;

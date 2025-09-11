@@ -59,7 +59,6 @@ export function ImageUploadCompact({
           onChange(base64);
         }
       } catch (error) {
-        console.error("Error processing file:", error);
         alert("Error al procesar la imagen");
         setPreviewUrl("");
       } finally {
@@ -220,5 +219,3 @@ export function ImageUploadCompact({
     </div>
   );
 }
-
-

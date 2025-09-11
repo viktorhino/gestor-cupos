@@ -31,6 +31,9 @@ export function ImageModal({
             <ImageIcon className="h-5 w-5" />
             {title}
           </DialogTitle>
+          <DialogDescription>
+            Visualice la imagen en tamaño completo
+          </DialogDescription>
         </DialogHeader>
 
         <div className="p-6">
@@ -58,5 +61,3 @@ export function ImageModal({
     </Dialog>
   );
 }
-
-

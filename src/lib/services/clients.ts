@@ -11,7 +11,6 @@ export class ClientService {
       .order("empresa");
 
     if (error) {
-      console.error("Error fetching clients:", error);
       return [];
     }
 
@@ -26,7 +25,6 @@ export class ClientService {
       .single();
 
     if (error) {
-      console.error("Error fetching client:", error);
       return null;
     }
 
@@ -48,8 +46,6 @@ export class ClientService {
       ...(client.notas && { notas: client.notas }),
     };
 
-    console.log("Clean client data:", cleanClient);
-
     const { data, error } = await this.supabase
       .from("clients")
       .insert([cleanClient])
@@ -57,12 +53,6 @@ export class ClientService {
       .single();
 
     if (error) {
-      console.error("Error creating client:", error);
-      console.error("Error details:", JSON.stringify(error, null, 2));
-      console.error(
-        "Client data being inserted:",
-        JSON.stringify(cleanClient, null, 2)
-      );
       return null;
     }
 
@@ -81,7 +71,6 @@ export class ClientService {
       .single();
 
     if (error) {
-      console.error("Error updating client:", error);
       return null;
     }
 
@@ -92,7 +81,6 @@ export class ClientService {
     const { error } = await this.supabase.from("clients").delete().eq("id", id);
 
     if (error) {
-      console.error("Error deleting client:", error);
       return false;
     }
 

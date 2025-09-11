@@ -63,7 +63,6 @@ export function PaymentImageUpload({
         toast.info("Imagen seleccionada. Se subirá al guardar el pago.");
       }
     } catch (error) {
-      console.error("Error processing image:", error);
       toast.error("Error al procesar la imagen");
       setPreview(null);
     } finally {

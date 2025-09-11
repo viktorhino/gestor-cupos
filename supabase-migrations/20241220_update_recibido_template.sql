@@ -16,3 +16,5 @@ WHERE name = 'recibido';
 SELECT name, template_content 
 FROM message_templates 
 WHERE name = 'recibido';
+
+

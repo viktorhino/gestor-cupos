@@ -370,3 +370,6 @@ export const thermalPrinter = new ThermalPrinterService();
 
 
 
+
+
+

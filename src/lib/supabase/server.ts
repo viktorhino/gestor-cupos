@@ -6,6 +6,9 @@ export function createClient() {
   const cookieStore = cookies();
 
   return createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
+    db: {
+      schema: supabaseConfig.schema,
+    },
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value;

@@ -34,3 +34,5 @@ SELECT name, estado_trigger, is_active
 FROM message_templates 
 WHERE name IN ('montado', 'delegado', 'recibido', 'impreso', 'empacado', 'entregado')
 ORDER BY name;
+
+

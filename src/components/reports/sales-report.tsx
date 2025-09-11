@@ -150,17 +150,14 @@ export function SalesReport() {
 
   const handleGenerateReport = () => {
     // Aquí se generaría el reporte con los datos reales
-    console.log("Generando reporte...", { dateRange, selectedPeriod });
   };
 
   const handleExportPDF = () => {
     // Aquí se exportaría el reporte a PDF
-    console.log("Exportando a PDF...");
   };
 
   const handleExportExcel = () => {
     // Aquí se exportaría el reporte a Excel
-    console.log("Exportando a Excel...");
   };
 
   return (
@@ -419,6 +416,3 @@ export function SalesReport() {
     </div>
   );
 }
-
-
-

@@ -15,7 +15,6 @@ export function useClients() {
       setError(null);
     } catch (err) {
       setError("Error al cargar clientes");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -41,7 +40,6 @@ export function useClients() {
       return null;
     } catch (err) {
       setError("Error al crear cliente");
-      console.error(err);
       return null;
     }
   };

@@ -107,6 +107,7 @@ export interface Job {
   es_1x2?: boolean;
   terminaciones_especiales?: SpecialFinishConfig[];
   observaciones?: string;
+  tracking_token?: string;
   created_at: string;
   updated_at: string;
 }
