@@ -264,6 +264,9 @@ export async function generateMessageContent(
   let urlSeguimiento = "";
   if (estado === "recibido" && job.tracking_token) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    console.log(
+      `[Tracking URL] Ambiente: ${process.env.NEXT_PUBLIC_APP_ENV}, URL Base: ${baseUrl}`
+    );
     urlSeguimiento = `\n\n🔗 *Seguimiento en tiempo real:*
 Puedes consultar el estado de tu trabajo en cualquier momento en:
 ${baseUrl}/track/${job.tracking_token}
@@ -361,6 +364,9 @@ export async function generateTrackingMessage(
   job: JobWithDetails
 ): Promise<string> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  console.log(
+    `[Tracking Message] Ambiente: ${process.env.NEXT_PUBLIC_APP_ENV}, URL Base: ${baseUrl}`
+  );
   const trackingUrl = `${baseUrl}/track/${job.tracking_token}`;
 
   const message = `🎯 *Seguimiento de tu Trabajo - T&V Cupos*
