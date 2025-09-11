@@ -22,13 +22,13 @@ CREATE POLICY "Usuarios autenticados pueden ver listas de precios" ON price_list
 
 -- Políticas de modificación (solo admin)
 CREATE POLICY "Solo admin puede modificar referencias de tarjetas" ON card_references
-  FOR ALL USING (has_role('admin'));
+  FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Solo admin puede modificar terminaciones especiales" ON card_special_finishes
-  FOR ALL USING (has_role('admin'));
+  FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Solo admin puede modificar tipos de volantes" ON flyer_types
-  FOR ALL USING (has_role('admin'));
+  FOR ALL USING (auth.role() = 'service_role');
 
 CREATE POLICY "Solo admin puede modificar listas de precios" ON price_lists
-  FOR ALL USING (has_role('admin'));
+  FOR ALL USING (auth.role() = 'service_role');
